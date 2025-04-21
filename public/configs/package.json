@@ -1,0 +1,9 @@
+{
+  "name": "@fuyuna/configs",
+  "author": "fuyuna",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "packageManager": "pnpm@10.8.1"
+}
