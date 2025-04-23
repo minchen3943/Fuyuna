@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
-class PostgresConfig {
+class GraphqlConfig {
   constructor(env) {
     this.env = env;
   }
@@ -27,29 +27,23 @@ class PostgresConfig {
     const mode = this.getValue("NODE_ENV", false);
     return mode != "development";
   }
+  isSortSchema() {
+    const sortSchema = this.getValue("GRAPHQL_SORT_SCHEMA", true);
+    return sortSchema == "true";
+  }
 
-  getTypeOrmConfig() {
+  getGraphqlConfig() {
     return {
-      type: "postgres",
-      host: this.getValue("POSTGRES_HOST"),
-      port: parseInt(this.getValue("POSTGRES_PORT")),
-      username: this.getValue("POSTGRES_USER"),
-      password: this.getValue("POSTGRES_PASSWORD"),
-      database: this.getValue("POSTGRES_DATABASE"),
-      ssl: false,
-      autoLoadEntities: true,
-      synchronize: false,
-      timezone: "+08:00",
+      autoSchemaFile: this.getValue("GRAPHQL_AUTO_SCHEMA_FILE"),
+      sortSchema: this.isSortSchema(),
+      playground: !this.isProduction(),
+      debug: !this.isProduction(),
     };
   }
 }
 
-const postgresConfig = new PostgresConfig(process.env).ensureValues([
-  "POSTGRES_HOST",
-  "POSTGRES_PORT",
-  "POSTGRES_USER",
-  "POSTGRES_PASSWORD",
-  "POSTGRES_DATABASE",
+const graphqlConfig = new GraphqlConfig(process.env).ensureValues([
+  "GRAPHQL_AUTO_SCHEMA_FILE",
 ]);
 
-export { postgresConfig };
+export { graphqlConfig };

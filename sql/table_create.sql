@@ -89,9 +89,9 @@ CREATE TABLE fyn_comment
     comment_ip       TEXT        NOT NULL,
     comment_content  TEXT        NOT NULL
         CHECK (length(comment_content) BETWEEN 5 AND 2000),
-    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    comment_status   SMALLINT  DEFAULT 0 CHECK ( comment_status BETWEEN 0 AND 2)
+    created_at       TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
+    comment_status   SMALLINT    NOT NULL DEFAULT 0 CHECK ( comment_status BETWEEN 0 AND 2)
 );
 COMMENT ON TABLE fyn_comment IS '评论表';
 COMMENT ON COLUMN fyn_comment.comment_id IS '评论ID';

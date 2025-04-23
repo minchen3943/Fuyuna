@@ -1,7 +1,10 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { postgresConfig } from "@fuyuna/configs";
+import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { postgresConfig, graphqlConfig } from "@fuyuna/configs";
+import { CommentModule } from "./comment/comment.module";
 
 @Module({
   imports: [
@@ -9,8 +12,20 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: () => postgresConfig.getTypeOrmConfig(),
+      useFactory: () => ({
+        ...postgresConfig.getTypeOrmConfig(),
+      }),
     }),
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      //eslint-disable-next-line
+      useFactory: (): Partial<ApolloDriverConfig> => ({
+        ...graphqlConfig.getGraphqlConfig(),
+      }),
+    }),
+    CommentModule,
   ],
   controllers: [],
   providers: [],

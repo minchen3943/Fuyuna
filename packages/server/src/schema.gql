@@ -1,0 +1,60 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Comment {
+  comment_content: String!
+  comment_email: String
+  comment_id: ID!
+  comment_ip: String!
+  comment_status: Int!
+  comment_username: String!
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+"""评论状态枚举"""
+enum CommentStatus {
+  Abnormal
+  Approved
+  Pending
+}
+
+input CreateCommentInput {
+  comment_content: String!
+  comment_email: String
+  comment_ip: String!
+  comment_username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  create(input: CreateCommentInput!): Comment!
+  delete(comment_id: Int!): Boolean!
+  update(input: UpdateCommentInput!): Comment!
+  updateStatus(comment_id: Int!, comment_status: Int!): Comment!
+}
+
+type Query {
+  findAll: [Comment!]!
+  findById(id: Int!): Comment
+  findByPage(page: Int!, pageSize: Int!): [Comment!]!
+  getTotalPages(pageSize: Int!): TotalPages!
+}
+
+type TotalPages {
+  totalPages: Int!
+}
+
+input UpdateCommentInput {
+  comment_content: String
+  comment_email: String
+  comment_id: Float!
+  comment_ip: String
+  comment_status: CommentStatus
+  comment_username: String
+}
