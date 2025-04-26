@@ -2,15 +2,47 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Admin {
+  """管理员ID"""
+  adminId: Int!
+
+  """管理员名称"""
+  adminName: String!
+
+  """管理员密码哈希"""
+  adminPasswordHash: String!
+
+  """创建时间"""
+  createdAt: DateTime!
+
+  """是否激活"""
+  isActive: Boolean!
+
+  """更新时间"""
+  updatedAt: DateTime!
+}
+
+type AdminResult {
+  code: Int!
+  data: Admin
+  message: String!
+}
+
 type Comment {
-  comment_content: String!
-  comment_email: String
-  comment_id: ID!
-  comment_ip: String!
-  comment_status: Int!
-  comment_username: String!
+  commentContent: String!
+  commentEmail: String
+  commentId: ID!
+  commentIp: String!
+  commentStatus: Int!
+  commentUserName: String!
   created_at: DateTime
   updated_at: DateTime
+}
+
+type CommentResult {
+  code: Int!
+  data: Comment
+  message: String!
 }
 
 """评论状态枚举"""
@@ -20,11 +52,16 @@ enum CommentStatus {
   Pending
 }
 
+input CreateAdminInput {
+  adminName: String!
+  adminPassword: String!
+}
+
 input CreateCommentInput {
-  comment_content: String!
-  comment_email: String
-  comment_ip: String!
-  comment_username: String!
+  commentContent: String!
+  commentEmail: String
+  commentIp: String!
+  commentUserName: String!
 }
 
 """
@@ -32,29 +69,48 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input LoginAdminInput {
+  adminName: String!
+  adminPassword: String!
+}
+
 type Mutation {
-  create(input: CreateCommentInput!): Comment!
-  delete(comment_id: Int!): Boolean!
-  update(input: UpdateCommentInput!): Comment!
-  updateStatus(comment_id: Int!, comment_status: Int!): Comment!
+  checkAdminPassWord(data: LoginAdminInput!): AdminResult!
+  createAdmin(data: CreateAdminInput!): AdminResult!
+  createComment(input: CreateCommentInput!): CommentResult!
+  deleteAdmin(adminId: Int!): AdminResult!
+  deleteComment(comment_id: Int!): CommentResult!
+  updateAdmin(data: UpdateAdminInput!): AdminResult!
+  updateAdminStatus(adminId: Int!, isActive: Boolean!): AdminResult!
+  updateComment(input: UpdateCommentInput!): CommentResult!
+  updateCommentStatus(comment_id: Int!, comment_status: Int!): CommentResult!
 }
 
 type Query {
-  findAll: [Comment!]!
-  findById(id: Int!): Comment
-  findByPage(page: Int!, pageSize: Int!): [Comment!]!
-  getTotalPages(pageSize: Int!): TotalPages!
+  findAdminById(id: Int!): AdminResult
+  findAllAdmin: AdminResult!
+  findAllComment: CommentResult!
+  findCommentById(id: Int!): CommentResult
+  findCommentByPage(page: Int!, pageSize: Int!): CommentResult!
+  getCommentTotalPages(pageSize: Int!): TotalPages!
 }
 
 type TotalPages {
   totalPages: Int!
 }
 
+input UpdateAdminInput {
+  adminId: Int!
+  adminName: String
+  adminPassword: String
+  isActive: Boolean
+}
+
 input UpdateCommentInput {
-  comment_content: String
-  comment_email: String
-  comment_id: Float!
-  comment_ip: String
-  comment_status: CommentStatus
-  comment_username: String
+  commentContent: String
+  commentEmail: String
+  commentId: Float!
+  commentIp: String
+  commentStatus: CommentStatus
+  commentUserName: String
 }

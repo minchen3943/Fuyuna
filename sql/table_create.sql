@@ -35,12 +35,13 @@ CREATE TABLE fyn_admin
 (
     admin_id            SERIAL PRIMARY KEY,
     admin_name          VARCHAR(20) NOT NULL
-        CHECK (admin_name ~ '^[a-zA-Z0-9_]{4,20}$'),
+        CHECK (admin_name ~ '^[a-zA-Z0-9_]{5,20}$'),
     admin_password_hash text        NOT NULL,
     is_active           BOOLEAN     NOT NULL DEFAULT TRUE,
     created_at          TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
     updated_at          TIMESTAMP            DEFAULT CURRENT_TIMESTAMP
 );
+CREATE INDEX idx_admin_name ON fyn_admin USING GIN (admin_name gin_trgm_ops);
 COMMENT ON TABLE fyn_admin IS '系统管理员账号表';
 COMMENT ON COLUMN fyn_admin.admin_id IS '管理员账号ID';
 COMMENT ON COLUMN fyn_admin.admin_name IS '管理员账号名(4-20位)';

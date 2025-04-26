@@ -1,9 +1,9 @@
-import * as dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+import * as dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 class PostgresConfig {
   constructor(env) {
@@ -24,32 +24,32 @@ class PostgresConfig {
   }
 
   isProduction() {
-    const mode = this.getValue("NODE_ENV", false);
-    return mode != "development";
+    const mode = this.getValue('NODE_ENV', false);
+    return mode != 'development';
   }
 
   getTypeOrmConfig() {
     return {
-      type: "postgres",
-      host: this.getValue("POSTGRES_HOST"),
-      port: parseInt(this.getValue("POSTGRES_PORT")),
-      username: this.getValue("POSTGRES_USER"),
-      password: this.getValue("POSTGRES_PASSWORD"),
-      database: this.getValue("POSTGRES_DATABASE"),
+      type: 'postgres',
+      host: this.getValue('POSTGRES_HOST'),
+      port: parseInt(this.getValue('POSTGRES_PORT')),
+      username: this.getValue('POSTGRES_USER'),
+      password: this.getValue('POSTGRES_PASSWORD'),
+      database: this.getValue('POSTGRES_DATABASE'),
       ssl: false,
       autoLoadEntities: true,
       synchronize: false,
-      timezone: "+08:00",
+      timezone: '+08:00',
     };
   }
 }
 
 const postgresConfig = new PostgresConfig(process.env).ensureValues([
-  "POSTGRES_HOST",
-  "POSTGRES_PORT",
-  "POSTGRES_USER",
-  "POSTGRES_PASSWORD",
-  "POSTGRES_DATABASE",
+  'POSTGRES_HOST',
+  'POSTGRES_PORT',
+  'POSTGRES_USER',
+  'POSTGRES_PASSWORD',
+  'POSTGRES_DATABASE',
 ]);
 
 export { postgresConfig };

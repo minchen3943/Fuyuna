@@ -1,9 +1,9 @@
-import * as dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+import * as dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 class GraphqlConfig {
   constructor(env) {
@@ -24,17 +24,17 @@ class GraphqlConfig {
   }
 
   isProduction() {
-    const mode = this.getValue("NODE_ENV", false);
-    return mode != "development";
+    const mode = this.getValue('NODE_ENV', false);
+    return mode != 'development';
   }
   isSortSchema() {
-    const sortSchema = this.getValue("GRAPHQL_SORT_SCHEMA", true);
-    return sortSchema == "true";
+    const sortSchema = this.getValue('GRAPHQL_SORT_SCHEMA', true);
+    return sortSchema == 'true';
   }
 
   getGraphqlConfig() {
     return {
-      autoSchemaFile: this.getValue("GRAPHQL_AUTO_SCHEMA_FILE"),
+      autoSchemaFile: this.getValue('GRAPHQL_AUTO_SCHEMA_FILE'),
       sortSchema: this.isSortSchema(),
       playground: !this.isProduction(),
       debug: !this.isProduction(),
@@ -43,7 +43,7 @@ class GraphqlConfig {
 }
 
 const graphqlConfig = new GraphqlConfig(process.env).ensureValues([
-  "GRAPHQL_AUTO_SCHEMA_FILE",
+  'GRAPHQL_AUTO_SCHEMA_FILE',
 ]);
 
 export { graphqlConfig };

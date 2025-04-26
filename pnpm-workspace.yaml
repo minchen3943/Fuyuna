@@ -5,11 +5,11 @@ packages:
 pnpm:
   overrides:
     sharp: 0.32.6
-    "@nestjs/core": ^10.0.0
-    "@swc/core": 1.3.92
+    '@nestjs/core': ^10.0.0
+    '@swc/core': 1.3.92
 
 onlyBuiltDependencies:
-  - "@apollo/protobufjs"
+  - '@apollo/protobufjs'
   - core-js
   - esbuild
   - sharp
