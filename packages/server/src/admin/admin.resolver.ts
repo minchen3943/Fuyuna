@@ -6,8 +6,12 @@ import {
   LoginAdminInput,
   UpdateAdminInput,
 } from './input/admin.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Resolver(() => AdminResult)
+@UseGuards(JwtAuthGuard)
 export class AdminResolver {
   constructor(private readonly adminService: AdminService) {}
 
@@ -37,6 +41,7 @@ export class AdminResolver {
     return { code: 204, message: `No admin found with ID ${id}`, data: null };
   }
 
+  @Public()
   @Mutation(() => AdminResult)
   async createAdmin(@Args('data') data: CreateAdminInput) {
     if (!/^[a-zA-Z0-9_]{5,20}$/.test(data.adminName)) {

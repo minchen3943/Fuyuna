@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
+import { Request, Response } from 'express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ApolloDriver } from '@nestjs/apollo';
 import { postgresConfig, graphqlConfig } from '@fuyuna/configs';
@@ -26,6 +27,10 @@ import { AuthModule } from './auth/auth.module';
       inject: [ConfigService],
       useFactory: () => ({
         ...graphqlConfig.getGraphqlConfig(),
+        context: ({ req, res }: { req: Request; res: Response }) => ({
+          req,
+          res,
+        }),
       }),
     }),
 

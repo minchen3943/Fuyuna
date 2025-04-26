@@ -21,7 +21,9 @@ export class CodeToStatusInterceptor implements NestInterceptor {
     const response = ctx.getResponse<Response>();
     return next.handle().pipe(
       map((value: ApiResponse) => {
-        response.status(value.code);
+        if (typeof response.status === 'function') {
+          response.status(value.code);
+        }
         if (value.data === null) {
           value.data = [];
         }

@@ -11,15 +11,16 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  public async adminLogin(
+  public async validateAdmin(
     data: AdminAuthPayLoadDto,
-  ): Promise<string | boolean> {
+  ): Promise<string | null> {
     if (await this.adminService.checkAdminPassWord(data)) {
       const payload = { username: data.adminName };
       const access_token = this.jwtService.sign(payload);
       this.logger.log(`Admin get access_token succeed with ${data.adminName}`);
       return access_token;
     }
-    return false;
+    this.logger.error(`Admin fail to get access_token with ${data.adminName}`);
+    return null;
   }
 }
