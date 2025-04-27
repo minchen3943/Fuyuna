@@ -18,6 +18,7 @@ export class AdminResolver {
   @Query(() => AdminResult)
   async findAllAdmin() {
     const result = await this.adminService.findAll();
+    console.log(result);
     if (result) {
       return {
         code: 200,
@@ -35,10 +36,10 @@ export class AdminResolver {
       return {
         code: 200,
         message: `Found admin with ID ${id}`,
-        data: result,
+        data: [result],
       };
     }
-    return { code: 204, message: `No admin found with ID ${id}`, data: null };
+    return { code: 204, message: `No admin found with ID ${id}`, data: [] };
   }
 
   @Public()
@@ -49,7 +50,7 @@ export class AdminResolver {
         code: 400,
         message:
           'The username must be 5-20 characters long and contain only letters, numbers, or underscores.',
-        data: null,
+        data: [],
       };
     }
     const result = await this.adminService.create(data);
@@ -57,10 +58,10 @@ export class AdminResolver {
       return {
         code: 200,
         message: `Admin created successfully with ID ${result.adminId}`,
-        data: result,
+        data: [result],
       };
     }
-    return { code: 204, message: `Failed to create admin`, data: null };
+    return { code: 204, message: `Failed to create admin`, data: [] };
   }
 
   @Mutation(() => AdminResult)
@@ -70,13 +71,13 @@ export class AdminResolver {
       return {
         code: 200,
         message: `Admin updated successfully with ID ${result.adminId}`,
-        data: result,
+        data: [result],
       };
     }
     return {
       code: 204,
       message: `Failed to update Admin with ID ${data.adminId}`,
-      data: null,
+      data: [],
     };
   }
 
@@ -89,7 +90,7 @@ export class AdminResolver {
     return {
       code: 200,
       message: `Admin updated successfully with ID ${adminId}`,
-      data: result,
+      data: [result],
     };
   }
 
@@ -100,13 +101,13 @@ export class AdminResolver {
       return {
         code: 200,
         message: `Admin deleted successfully with ID ${adminId}`,
-        data: null,
+        data: [],
       };
     }
     return {
       code: 204,
       message: `Failed to delete Admin with ID ${adminId}`,
-      data: null,
+      data: [],
     };
   }
 
@@ -117,13 +118,13 @@ export class AdminResolver {
       return {
         code: 200,
         message: `Admin password is correct`,
-        data: null,
+        data: [],
       };
     }
     return {
       code: 401,
       message: `Admin name or password is incorrect`,
-      data: null,
+      data: [],
     };
   }
 }

@@ -10,7 +10,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('admin/login')
+  @Post('admin/token')
   @Public()
   async adminLogin(@Body() data: AdminAuthPayLoadDto) {
     if (!data || !data.adminName || !data.adminPassword) {
@@ -33,8 +33,8 @@ export class AuthController {
     return { code: 401, message: `Failed to login admin`, data: null };
   }
 
-  @Get('admin/status')
-  status(@Req() req: Request) {
+  @Get('admin/token')
+  checkToken(@Req() req: Request) {
     if (req.user) {
       return {
         code: 200,

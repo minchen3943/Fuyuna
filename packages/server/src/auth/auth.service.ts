@@ -14,6 +14,10 @@ export class AuthService {
   public async validateAdmin(
     data: AdminAuthPayLoadDto,
   ): Promise<string | null> {
+    if (!(await this.adminService.findByName(data.adminName))) {
+      this.logger.error(`Fail to found admin with ${data.adminName}`);
+      return null;
+    }
     if (await this.adminService.checkAdminPassWord(data)) {
       const payload = { username: data.adminName };
       const access_token = this.jwtService.sign(payload);

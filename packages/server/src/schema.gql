@@ -24,7 +24,7 @@ type Admin {
 
 type AdminResult {
   code: Int!
-  data: Admin
+  data: [Admin!]
   message: String!
 }
 

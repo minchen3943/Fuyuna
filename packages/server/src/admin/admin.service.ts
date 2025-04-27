@@ -39,6 +39,10 @@ export class AdminService {
     return null;
   }
 
+  public async findByName(name: string): Promise<Admin | null> {
+    return await this.adminRepo.findOneBy({ adminName: name });
+  }
+
   public async create(input: CreateAdminInput): Promise<Admin | null> {
     const admin = this.adminRepo.create({
       adminName: input.adminName,
@@ -55,12 +59,18 @@ export class AdminService {
   }
 
   public async update(input: UpdateAdminInput): Promise<Admin | null> {
-    const admin = this.adminRepo.create({ adminId: input.adminId });
+    const admin = await this.adminRepo.findOneBy({ adminId: input.adminId });
+    if (!admin) {
+      this.logger.warn(`No admin found with ID ${input.adminId}`);
+      return null;
+    }
     if (input.adminPassword) {
       admin.adminPasswordHash = await this.handlePassword(input.adminPassword);
-    } else if (input.adminName) {
+    }
+    if (input.adminName) {
       admin.adminName = input.adminName;
-    } else if (input.isActive) {
+    }
+    if (typeof input.isActive === 'boolean') {
       admin.isActive = input.isActive;
     }
     const result = await this.adminRepo.save(admin);

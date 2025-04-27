@@ -17,6 +17,6 @@ export class AdminResult {
     type: () => Admin,
     required: false,
   })
-  @Field(() => Admin, { nullable: true })
-  data?: Admin;
+  @Field(() => [Admin], { nullable: true })
+  data?: Admin[];
 }
