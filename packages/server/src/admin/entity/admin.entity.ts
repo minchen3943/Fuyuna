@@ -1,4 +1,3 @@
-import { ApiTags, ApiProperty } from '@nestjs/swagger';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import {
   Entity,
@@ -8,23 +7,13 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@ApiTags('管理员表')
 @ObjectType()
 @Entity('fyn_admin')
 export class Admin {
-  @ApiProperty({
-    description: '管理员ID',
-    type: Number,
-  })
   @Field(() => Int, { description: '管理员ID' })
   @PrimaryGeneratedColumn({ name: 'admin_id' })
   adminId!: number;
 
-  @ApiProperty({
-    description: '管理员名称',
-    type: String,
-    maxLength: 20,
-  })
   @Field(() => String, { description: '管理员名称' })
   @Column({
     name: 'admin_name',
@@ -34,12 +23,6 @@ export class Admin {
   })
   adminName!: string;
 
-  @ApiProperty({
-    description: '管理员密码哈希',
-    type: String,
-    format: 'password',
-    writeOnly: true,
-  })
   @Field(() => String, { description: '管理员密码哈希' })
   @Column({
     name: 'admin_password_hash',
@@ -48,11 +31,6 @@ export class Admin {
   })
   adminPasswordHash!: string;
 
-  @ApiProperty({
-    description: '是否激活',
-    type: Boolean,
-    default: true,
-  })
   @Field(() => Boolean, { description: '是否激活', defaultValue: true })
   @Column({
     name: 'is_active',
@@ -62,11 +40,6 @@ export class Admin {
   })
   isActive!: boolean;
 
-  @ApiProperty({
-    description: '创建时间',
-    type: String,
-    format: 'date-time',
-  })
   @Field(() => Date, { description: '创建时间' })
   @CreateDateColumn({
     name: 'created_at',
@@ -75,11 +48,6 @@ export class Admin {
   })
   createdAt!: Date;
 
-  @ApiProperty({
-    description: '更新时间',
-    type: String,
-    format: 'date-time',
-  })
   @Field(() => Date, { description: '更新时间' })
   @UpdateDateColumn({
     name: 'updated_at',

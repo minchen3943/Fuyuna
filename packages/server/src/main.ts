@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { ConsoleLogger, VersioningType } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
 import { CodeToStatusInterceptor } from './common/Interceptor/code_to_status.interceptor';
@@ -12,22 +11,12 @@ async function bootstrap() {
       logLevels: ['error', 'warn', 'log'],
     }),
   });
-
-  const config = new DocumentBuilder()
-    .setTitle('Fuyuna API')
-    .setDescription('The cats API description')
-    .setVersion('1.0')
-    .build();
-
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-
-  SwaggerModule.setup('/api', app, documentFactory);
   app.enableVersioning({
     type: VersioningType.URI,
   });
   app.use(session({ secret: 'fuyuna', resave: true, saveUninitialized: true }));
   app.useGlobalInterceptors(new CodeToStatusInterceptor());
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(3000);
 }
 void bootstrap();
