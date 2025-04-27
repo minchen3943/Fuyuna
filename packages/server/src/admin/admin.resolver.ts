@@ -8,7 +8,6 @@ import {
 } from './input/admin.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { Public } from 'src/common/decorators/public.decorator';
 
 @Resolver(() => AdminResult)
 @UseGuards(JwtAuthGuard)
@@ -18,7 +17,6 @@ export class AdminResolver {
   @Query(() => AdminResult)
   async findAllAdmin() {
     const result = await this.adminService.findAll();
-    console.log(result);
     if (result) {
       return {
         code: 200,
@@ -42,7 +40,6 @@ export class AdminResolver {
     return { code: 204, message: `No admin found with ID ${id}`, data: [] };
   }
 
-  @Public()
   @Mutation(() => AdminResult)
   async createAdmin(@Args('data') data: CreateAdminInput) {
     if (!/^[a-zA-Z0-9_]{5,20}$/.test(data.adminName)) {

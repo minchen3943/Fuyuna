@@ -17,6 +17,6 @@ export class CommentResult {
     type: () => Comment,
     required: false,
   })
-  @Field(() => Comment, { nullable: true })
-  data?: Comment;
+  @Field(() => [Comment], { nullable: true })
+  data?: Comment[];
 }

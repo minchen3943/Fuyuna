@@ -41,7 +41,7 @@ type Comment {
 
 type CommentResult {
   code: Int!
-  data: Comment
+  data: [Comment!]
   message: String!
 }
 
@@ -96,7 +96,9 @@ type Query {
 }
 
 type TotalPages {
-  totalPages: Int!
+  code: Int!
+  data: Int
+  message: String!
 }
 
 input UpdateAdminInput {
