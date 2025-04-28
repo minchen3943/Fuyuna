@@ -1,13 +1,14 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Article } from './article.entity';
 
 @ObjectType()
-export class TotalPagesOutput {
+export class ArticleResult {
   @Field(() => Int)
   code!: number;
 
   @Field()
   message!: string;
 
-  @Field(() => Int, { nullable: true })
-  data?: number;
+  @Field(() => [Article], { nullable: true })
+  data?: Article[];
 }

@@ -28,6 +28,32 @@ type AdminResult {
   message: String!
 }
 
+type Article {
+  article_bucket_name: String!
+  article_bucket_region: String!
+  article_id: ID!
+  article_key: String!
+  article_name: String!
+  article_status: Int!
+  article_title: String!
+  article_view_count: Int!
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+type ArticleResult {
+  code: Int!
+  data: [Article!]
+  message: String!
+}
+
+"""文章状态枚举"""
+enum ArticleStatus {
+  Hidden
+  Public
+  Reviewing
+}
+
 type Comment {
   commentContent: String!
   commentEmail: String
@@ -57,6 +83,14 @@ input CreateAdminInput {
   adminPassword: String!
 }
 
+input CreateArticleInput {
+  article_bucket_name: String!
+  article_bucket_region: String!
+  article_key: String!
+  article_name: String!
+  article_title: String!
+}
+
 input CreateCommentInput {
   commentContent: String!
   commentEmail: String
@@ -77,11 +111,15 @@ input LoginAdminInput {
 type Mutation {
   checkAdminPassWord(data: LoginAdminInput!): AdminResult!
   createAdmin(data: CreateAdminInput!): AdminResult!
+  createArticle(input: CreateArticleInput!): ArticleResult!
   createComment(input: CreateCommentInput!): CommentResult!
   deleteAdmin(adminId: Int!): AdminResult!
+  deleteArticle(article_id: Int!): ArticleResult!
   deleteComment(comment_id: Int!): CommentResult!
   updateAdmin(data: UpdateAdminInput!): AdminResult!
   updateAdminStatus(adminId: Int!, isActive: Boolean!): AdminResult!
+  updateArticle(input: UpdateArticleInput!): ArticleResult!
+  updateArticleStatus(article_id: Int!, article_status: Int!): ArticleResult!
   updateComment(input: UpdateCommentInput!): CommentResult!
   updateCommentStatus(comment_id: Int!, comment_status: Int!): CommentResult!
 }
@@ -89,13 +127,23 @@ type Mutation {
 type Query {
   findAdminById(id: Int!): AdminResult
   findAllAdmin: AdminResult!
+  findAllArticle: ArticleResult!
   findAllComment: CommentResult!
+  findArticleById(id: Int!): ArticleResult
+  findArticleByPage(page: Int!, pageSize: Int!): ArticleResult!
   findCommentById(id: Int!): CommentResult
   findCommentByPage(page: Int!, pageSize: Int!): CommentResult!
-  getCommentTotalPages(pageSize: Int!): TotalPages!
+  getArticleTotalPages(pageSize: Int!): TotalPages!
+  getCommentTotalPages(pageSize: Int!): TotalPagesOutput!
 }
 
 type TotalPages {
+  code: Int!
+  data: Int
+  message: String!
+}
+
+type TotalPagesOutput {
   code: Int!
   data: Int
   message: String!
@@ -106,6 +154,16 @@ input UpdateAdminInput {
   adminName: String
   adminPassword: String
   isActive: Boolean
+}
+
+input UpdateArticleInput {
+  article_bucket_name: String
+  article_bucket_region: String
+  article_id: Int!
+  article_key: String
+  article_name: String
+  article_status: ArticleStatus
+  article_title: String
 }
 
 input UpdateCommentInput {

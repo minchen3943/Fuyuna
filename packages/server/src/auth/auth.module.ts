@@ -14,6 +14,7 @@ import { JwtAuthGuard } from './guards/jwt.guard';
   imports: [
     PassportModule,
     JwtModule.registerAsync({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       useFactory: () => ({ ...jwtConfig.getTypeOrmConfig() }),
     }),
     forwardRef(() => AdminModule),

@@ -20,7 +20,7 @@ export class AuthService {
     }
     if (await this.adminService.checkAdminPassWord(data)) {
       const payload = { username: data.adminName };
-      const access_token = this.jwtService.sign(payload);
+      const access_token = await this.jwtService.signAsync(payload);
       this.logger.log(`Admin get access_token succeed with ${data.adminName}`);
       return access_token;
     }

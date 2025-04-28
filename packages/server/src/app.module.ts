@@ -9,6 +9,8 @@ import { CommentModule } from './comment/comment.module';
 import { AdminModule } from './admin/admin.module';
 import { AdminResolver } from './admin/admin.resolver';
 import { AuthModule } from './auth/auth.module';
+import { ArticleModule } from './article/article.module';
+import { TencentCosModule } from './tencent-cos/tencent-cos.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { AuthModule } from './auth/auth.module';
     CommentModule,
     AdminModule,
     AuthModule,
+    ArticleModule,
+    TencentCosModule,
   ],
 
   controllers: [],

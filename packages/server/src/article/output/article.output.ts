@@ -1,7 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
-export class TotalPagesOutput {
+export class TotalPages {
   @Field(() => Int)
   code!: number;
 

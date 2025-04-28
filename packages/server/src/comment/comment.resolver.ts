@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { CreateCommentInput, UpdateCommentInput } from './input/comment.input';
-import { TotalPages } from './output/comment.output';
+import { TotalPagesOutput } from './output/comment.output';
 import { CommentResult } from './entity/commentResult.entity';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -43,7 +43,7 @@ export class CommentResolver {
     };
   }
 
-  @Query(() => TotalPages)
+  @Query(() => TotalPagesOutput)
   async getCommentTotalPages(
     @Args('pageSize', { type: () => Int }) pageSize: number,
   ) {
