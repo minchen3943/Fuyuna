@@ -6,10 +6,14 @@ import { ArticleResult } from './entity/articleResult.entity';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { ArticleStatus } from './entity/article.entity';
+import { TencentCosService } from 'src/tencent-cos/tencent-cos.service';
 
 @Resolver(() => ArticleResult)
 export class ArticleResolver {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(
+    private readonly articleService: ArticleService,
+    private readonly tencentCosService: TencentCosService,
+  ) {}
 
   @Query(() => ArticleResult)
   async findAllArticle() {
@@ -34,7 +38,7 @@ export class ArticleResolver {
       return {
         code: 200,
         message: `Found ${result.length} articles on page ${page}`,
-        data: [result],
+        data: result,
       };
     }
     return {
@@ -94,8 +98,9 @@ export class ArticleResolver {
   @UseGuards(JwtAuthGuard)
   async updateArticle(@Args('input') data: UpdateArticleInput) {
     if (
-      typeof data.article_status !== 'number' ||
-      !Object.values(ArticleStatus).includes(data.article_status)
+      data.article_status &&
+      (typeof data.article_status !== 'number' ||
+        !Object.values(ArticleStatus).includes(data.article_status))
     ) {
       return {
         code: 400,
@@ -150,6 +155,19 @@ export class ArticleResolver {
   async deleteArticle(
     @Args('article_id', { type: () => Int }) article_id: number,
   ) {
+    const article = await this.articleService.findById(article_id);
+    if (!article) {
+      return {
+        code: 204,
+        message: `No article found with ID ${article_id}`,
+        data: null,
+      };
+    }
+    await this.tencentCosService.delObject({
+      Region: article?.article_bucket_region,
+      Bucket: article?.article_bucket_name,
+      Key: article?.article_key,
+    });
     const result = await this.articleService.remove(article_id);
     if (result === true) {
       return {

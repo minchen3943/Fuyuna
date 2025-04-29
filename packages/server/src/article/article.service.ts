@@ -34,6 +34,7 @@ export class ArticleService {
    */
   async findAll(): Promise<Article[] | null> {
     const articles = await this.articleRepo.find({
+      where: { article_status: 1 },
       order: { created_at: 'DESC' },
     });
     if (articles.length > 0) {
@@ -73,6 +74,7 @@ export class ArticleService {
     const articles = await this.articleRepo.find({
       skip: (page - 1) * pageSize,
       take: pageSize,
+      where: { article_status: 1 },
       order: { created_at: 'DESC' },
     });
     if (articles.length > 0) {
