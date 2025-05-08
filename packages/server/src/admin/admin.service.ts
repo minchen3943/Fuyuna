@@ -27,6 +27,7 @@ export class AdminService {
     const admins = await this.adminRepo.find();
     if (admins.length > 0) {
       this.logger.log(`Found ${admins.length} admins`);
+      this.logger.debug(`Admins: ${JSON.stringify(admins)}`);
       return admins;
     }
     this.logger.warn('No admins found');
@@ -42,6 +43,7 @@ export class AdminService {
     const admin = await this.adminRepo.findOneBy({ adminId: id });
     if (admin) {
       this.logger.log(`Found admin with ID ${id}`);
+      this.logger.debug(`Admin: ${JSON.stringify(admin)}`);
       return admin;
     }
     this.logger.warn(`No admin found with ID ${id}`);
@@ -70,6 +72,7 @@ export class AdminService {
     const result = await this.adminRepo.save(admin);
     if (result) {
       this.logger.log(`Admin created successfully with ID ${result.adminId}`);
+      this.logger.debug(`Admin: ${JSON.stringify(result)}`);
       return result;
     } else {
       this.logger.warn('Failed to create admin');
@@ -100,6 +103,7 @@ export class AdminService {
     const result = await this.adminRepo.save(admin);
     if (result) {
       this.logger.log(`Admin updated successfully with ID ${admin.adminId}`);
+      this.logger.debug(`Admin: ${JSON.stringify(result)}`);
       return this.findById(admin.adminId);
     } else {
       this.logger.warn(`Failed to update Admin with ID ${admin.adminId}`);
@@ -133,6 +137,7 @@ export class AdminService {
     const result = await this.adminRepo.delete(id);
     if (result.affected === 1) {
       this.logger.log(`Admin deleted successfully with ID ${id}`);
+      this.logger.debug(`Result: ${JSON.stringify(result)}`);
       return Promise.resolve(true);
     } else {
       this.logger.warn(`Failed to delete Admin with ID ${id}`);
@@ -152,6 +157,7 @@ export class AdminService {
     if (!correctUser) {
       throw new Error(`No admin found with NAME ${data.adminName}`);
     }
+    this.logger.log(`Admin found with NAME ${data.adminName}`);
     return Promise.resolve(
       await bcrypt.compare(data.adminPassword, correctUser.adminPasswordHash),
     );

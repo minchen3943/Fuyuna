@@ -36,49 +36,74 @@ export class Article {
   /**
    * 文章ID
    */
-  @Field(() => ID)
+  @Field(() => ID, { description: '文章ID' })
   @PrimaryGeneratedColumn({ name: 'article_id' })
   article_id!: number;
 
   /**
    * 文章标题
    */
-  @Field(() => String, { nullable: false })
-  @Column({ type: 'text', nullable: false, name: 'article_title' })
+  @Field(() => String, { nullable: false, description: '文章标题' })
+  @Column({
+    type: 'text',
+    nullable: false,
+    name: 'article_title',
+    comment: '文章标题',
+  })
   article_title!: string;
 
   /**
    * COS 存储桶名称
    */
-  @Field(() => String, { nullable: false })
-  @Column({ length: 50, nullable: false, name: 'article_bucket_name' })
+  @Field(() => String, { nullable: false, description: 'COS 存储桶名称' })
+  @Column({
+    length: 50,
+    nullable: false,
+    name: 'article_bucket_name',
+    comment: 'COS 存储桶名称',
+  })
   article_bucket_name!: string;
 
   /**
    * COS 存储桶所在区域
    */
-  @Field(() => String, { nullable: false })
-  @Column({ length: 20, nullable: false, name: 'article_bucket_region' })
+  @Field(() => String, { nullable: false, description: 'COS 存储桶所在区域' })
+  @Column({
+    length: 20,
+    nullable: false,
+    name: 'article_bucket_region',
+    comment: 'COS 存储桶所在区域',
+  })
   article_bucket_region!: string;
 
   /**
    * COS 文件 key
    */
-  @Field(() => String, { nullable: false })
-  @Column({ length: 500, nullable: false, name: 'article_key' })
+  @Field(() => String, { nullable: false, description: 'COS 文件 key' })
+  @Column({
+    length: 500,
+    nullable: false,
+    name: 'article_key',
+    comment: 'COS 文件 key',
+  })
   article_key!: string;
 
   /**
    * 文件名
    */
-  @Field(() => String, { nullable: false })
-  @Column({ length: 100, nullable: false, name: 'article_name' })
+  @Field(() => String, { nullable: false, description: '文件名' })
+  @Column({
+    length: 100,
+    nullable: false,
+    name: 'article_name',
+    comment: '文件名',
+  })
   article_name!: string;
 
   /**
    * 创建时间
    */
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date, { nullable: true, description: '创建时间' })
   @CreateDateColumn({
     type: 'timestamp',
     name: 'created_at',
@@ -90,7 +115,7 @@ export class Article {
   /**
    * 最后更新时间
    */
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date, { nullable: true, description: '最后更新时间' })
   @UpdateDateColumn({
     type: 'timestamp',
     name: 'updated_at',
@@ -102,7 +127,7 @@ export class Article {
   /**
    * 文章浏览量
    */
-  @Field(() => Int, { nullable: false })
+  @Field(() => Int, { nullable: false, description: '文章浏览量' })
   @Column({
     type: 'integer',
     nullable: false,
@@ -114,7 +139,7 @@ export class Article {
   /**
    * 文章状态
    */
-  @Field(() => Int, { nullable: false })
+  @Field(() => Int, { nullable: false, description: '文章状态' })
   @Column({
     type: 'smallint',
     nullable: false,

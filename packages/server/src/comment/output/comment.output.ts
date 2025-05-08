@@ -8,18 +8,18 @@ export class TotalPagesOutput {
   /**
    * 状态码
    */
-  @Field(() => Int)
+  @Field(() => Int, { description: '状态码' })
   code!: number;
 
   /**
    * 返回消息
    */
-  @Field()
+  @Field({ description: '返回消息' })
   message!: string;
 
   /**
    * 总页数数据
    */
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, { nullable: true, description: '总页数数据' })
   data?: number;
 }

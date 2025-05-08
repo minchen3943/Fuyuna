@@ -8,11 +8,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from './entity/article.entity';
-import {
-  CreateArticleInput,
-  UpdateArticleInput,
-  PaginationInput,
-} from './input/article.input';
+import { CreateArticleInput, UpdateArticleInput } from './input/article.input';
 
 /**
  * @class ArticleService
@@ -44,6 +40,7 @@ export class ArticleService {
     });
     if (articles.length > 0) {
       this.logger.log(`Found ${articles.length} articles`);
+      this.logger.debug(`Articles: ${JSON.stringify(articles)}`);
       return articles;
     } else {
       this.logger.warn('No articles found');
@@ -61,6 +58,7 @@ export class ArticleService {
     const article = await this.articleRepo.findOneBy({ article_id: articleId });
     if (article) {
       this.logger.log(`Found article with ID ${articleId}`);
+      this.logger.debug(`Article: ${JSON.stringify(article)}`);
       return article;
     } else {
       this.logger.warn(`No article found with ID ${articleId}`);
@@ -84,6 +82,7 @@ export class ArticleService {
     });
     if (articles.length > 0) {
       this.logger.log(`Found ${articles.length} articles on page ${page}`);
+      this.logger.debug(`Articles: ${JSON.stringify(articles)}`);
       return articles;
     } else {
       this.logger.warn(`No articles found on page ${page}`);
@@ -101,6 +100,7 @@ export class ArticleService {
     const totalArticles = await this.articleRepo.count();
     const totalPages = Math.ceil(totalArticles / pageSize);
     this.logger.log(`Total pages: ${totalPages} for page size ${pageSize}`);
+    this.logger.debug(`Total articles: ${totalArticles}`);
     return { totalPages };
   }
 
@@ -117,6 +117,7 @@ export class ArticleService {
       this.logger.log(
         `Article created successfully with ID ${result.article_id}`,
       );
+      this.logger.debug(`Article: ${JSON.stringify(result)}`);
       return result;
     } else {
       this.logger.warn('Failed to create article');
@@ -131,17 +132,16 @@ export class ArticleService {
    * @returns {Promise<Article|null>} 更新后的文章或null
    */
   async update(data: UpdateArticleInput): Promise<Article | null> {
-    if (!(await this.findById(data.article_id))) {
+    if (!(await this.findById(data.articleId))) {
       return null;
     }
     const result = await this.articleRepo.save({ ...data });
     if (result) {
-      this.logger.log(
-        `Article updated successfully with ID ${data.article_id}`,
-      );
-      return await this.articleRepo.findOneBy({ article_id: data.article_id });
+      this.logger.log(`Article updated successfully with ID ${data.articleId}`);
+      this.logger.debug(`Updated article: ${JSON.stringify(result)}`);
+      return await this.articleRepo.findOneBy({ article_id: data.articleId });
     } else {
-      this.logger.warn(`Failed to update article with ID ${data.article_id}`);
+      this.logger.warn(`Failed to update article with ID ${data.articleId}`);
       return null;
     }
   }
@@ -167,6 +167,7 @@ export class ArticleService {
       this.logger.log(
         `Article status updated successfully for ID ${articleId}`,
       );
+      this.logger.debug(`Updated article status: ${articleStatus}`);
       return this.articleRepo.findOneBy({ article_id: articleId });
     } else {
       this.logger.warn(`Failed to update article status for ID ${articleId}`);
@@ -184,31 +185,11 @@ export class ArticleService {
     const result = await this.articleRepo.delete(articleId);
     if (result.affected === 1) {
       this.logger.log(`Article deleted successfully with ID ${articleId}`);
+      this.logger.debug(`Deleted article ID: ${articleId}`);
       return Promise.resolve(true);
     } else {
       this.logger.warn(`Failed to delete article with ID ${articleId}`);
       return Promise.resolve(false);
     }
-  }
-
-  async findWithPagination(paginationInput: PaginationInput): Promise<{
-    articles: Article[];
-    total: number;
-    currentPage: number;
-    pageSize: number;
-  }> {
-    const { page = 1, pageSize = 10 } = paginationInput;
-    const [articles, total] = await this.articleRepo.findAndCount({
-      order: { created_at: 'DESC' },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
-
-    return {
-      articles,
-      total,
-      currentPage: page,
-      pageSize,
-    };
   }
 }

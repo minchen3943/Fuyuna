@@ -10,18 +10,18 @@ export class ArticleResult {
   /**
    * 状态码
    */
-  @Field(() => Int)
+  @Field(() => Int, { description: '状态码' })
   code!: number;
 
   /**
    * 返回消息
    */
-  @Field()
+  @Field({ description: '返回消息' })
   message!: string;
 
   /**
    * 文章数据列表
    */
-  @Field(() => [Article], { nullable: true })
+  @Field(() => [Article], { nullable: true, description: '文章数据列表' })
   data?: Article[];
 }

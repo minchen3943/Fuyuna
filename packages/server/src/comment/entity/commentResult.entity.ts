@@ -9,18 +9,18 @@ export class CommentResult {
   /**
    * 状态码
    */
-  @Field(() => Int)
+  @Field(() => Int, { description: '状态码' })
   code!: number;
 
   /**
    * 返回消息
    */
-  @Field()
+  @Field({ description: '返回消息' })
   message!: string;
 
   /**
    * 评论数据列表
    */
-  @Field(() => [Comment], { nullable: true })
+  @Field(() => [Comment], { nullable: true, description: '评论数据列表' })
   data?: Comment[];
 }

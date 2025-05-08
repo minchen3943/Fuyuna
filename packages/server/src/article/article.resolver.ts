@@ -150,7 +150,7 @@ export class ArticleResolver {
 
     return {
       code: 204,
-      message: `Failed to update article with ID ${data.article_id}`,
+      message: `Failed to update article with ID ${data.articleId}`,
       data: null,
     };
   }

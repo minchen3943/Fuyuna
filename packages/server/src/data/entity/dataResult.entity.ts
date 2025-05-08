@@ -10,19 +10,19 @@ export class DataResult {
   /**
    * 状态码
    */
-  @Field(() => Int)
+  @Field(() => Int, { description: '状态码' })
   code!: number;
 
   /**
    * 返回消息
    */
-  @Field(() => String)
+  @Field(() => String, { description: '返回消息' })
   message!: string;
 
   /**
    *网站数据值
    */
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, { nullable: true, description: '网站数据值' })
   data?: number;
 }
 
@@ -35,18 +35,18 @@ export class AllDataResult {
   /**
    * 状态码
    */
-  @Field(() => Int)
+  @Field(() => Int, { description: '状态码' })
   code!: number;
 
   /**
    * 返回消息
    */
-  @Field(() => String)
+  @Field(() => String, { description: '返回消息' })
   message!: string;
 
   /**
    * 网站数据对象
    */
-  @Field(() => Data, { nullable: true })
+  @Field(() => Data, { nullable: true, description: '网站数据对象' })
   data?: Data;
 }

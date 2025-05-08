@@ -32,6 +32,7 @@ export class CommentService {
     const comments = await this.commentRepo.find();
     if (comments.length > 0) {
       this.logger.log(`Found ${comments.length} comments`);
+      this.logger.debug(`Comments: ${JSON.stringify(comments)}`);
       return comments;
     } else {
       this.logger.warn('No comments found');
@@ -49,6 +50,7 @@ export class CommentService {
     const comment = await this.commentRepo.findOneBy({ commentId: commentId });
     if (comment) {
       this.logger.log(`Found comment with ID ${commentId}`);
+      this.logger.debug(`Comment: ${JSON.stringify(comment)}`);
       return comment;
     } else {
       this.logger.warn(`No comment found with ID ${commentId}`);
@@ -71,6 +73,7 @@ export class CommentService {
     });
     if (comments.length > 0) {
       this.logger.log(`Found ${comments.length} comments on page ${page}`);
+      this.logger.debug(`Comments: ${JSON.stringify(comments)}`);
       return comments;
     } else {
       this.logger.warn(`No comments found on page ${page}`);
@@ -88,6 +91,7 @@ export class CommentService {
     const totalComments = await this.commentRepo.count();
     const totalPages = Math.ceil(totalComments / pageSize);
     this.logger.log(`Total pages: ${totalPages} for page size ${pageSize}`);
+    this.logger.debug(`Total comments: ${totalComments}`);
     return { totalPages };
   }
 
@@ -104,6 +108,7 @@ export class CommentService {
       this.logger.log(
         `Comment created successfully with ID ${result.commentId}`,
       );
+      this.logger.debug(`Comment: ${JSON.stringify(result)}`);
       return result;
     } else {
       this.logger.warn('Failed to create comment');
@@ -124,6 +129,7 @@ export class CommentService {
     const result = await this.commentRepo.save({ ...data });
     if (result) {
       this.logger.log(`Comment updated successfully with ID ${data.commentId}`);
+      this.logger.debug(`Updated comment: ${JSON.stringify(result)}`);
       return this.commentRepo.findOneBy({ commentId: data.commentId });
     } else {
       this.logger.warn(`Failed to update comment with ID ${data.commentId}`);
@@ -150,6 +156,7 @@ export class CommentService {
       this.logger.log(
         `Comment status updated successfully for ID ${commentId}`,
       );
+      this.logger.debug(`Updated comment status: ${JSON.stringify(result)}`);
       return this.commentRepo.findOneBy({ commentId: commentId });
     } else {
       this.logger.warn(`Failed to update comment status for ID ${commentId}`);
@@ -167,6 +174,7 @@ export class CommentService {
     const result = await this.commentRepo.delete(commentId);
     if (result.affected === 1) {
       this.logger.log(`Comment deleted successfully with ID ${commentId}`);
+      this.logger.debug(`Deleted comment ID: ${commentId}`);
       return Promise.resolve(true);
     } else {
       this.logger.warn(`Failed to delete comment with ID ${commentId}`);

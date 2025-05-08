@@ -17,7 +17,7 @@ export class Admin {
    * 管理员ID
    */
   @Field(() => Int, { description: '管理员ID' })
-  @PrimaryGeneratedColumn({ name: 'admin_id' })
+  @PrimaryGeneratedColumn({ name: 'admin_id', comment: '管理员ID' })
   adminId!: number;
 
   /**
@@ -29,6 +29,7 @@ export class Admin {
     type: 'varchar',
     length: 20,
     nullable: false,
+    comment: '管理员名称',
   })
   adminName!: string;
 
@@ -40,6 +41,7 @@ export class Admin {
     name: 'admin_password_hash',
     type: 'text',
     nullable: false,
+    comment: '管理员密码哈希',
   })
   adminPasswordHash!: string;
 
@@ -52,13 +54,14 @@ export class Admin {
     type: 'boolean',
     nullable: false,
     default: () => 'true',
+    comment: '是否激活',
   })
   isActive!: boolean;
 
   /**
    * 创建时间
    */
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date, { nullable: true, description: '创建时间' })
   @CreateDateColumn({
     type: 'timestamp',
     name: 'created_at',
@@ -70,7 +73,7 @@ export class Admin {
   /**
    * 最后更新时间
    */
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date, { nullable: true, description: '最后更新时间' })
   @UpdateDateColumn({
     type: 'timestamp',
     name: 'updated_at',

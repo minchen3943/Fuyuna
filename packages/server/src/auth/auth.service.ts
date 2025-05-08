@@ -37,6 +37,7 @@ export class AuthService {
       const payload = { username: data.adminName };
       const access_token = await this.jwtService.signAsync(payload);
       this.logger.log(`Admin get access_token succeed with ${data.adminName}`);
+      this.logger.debug(`Access_token: ${access_token}`);
       return access_token;
     }
     this.logger.error(`Admin fail to get access_token with ${data.adminName}`);

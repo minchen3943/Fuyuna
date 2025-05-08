@@ -8,13 +8,13 @@ export class CreateAdminInput {
   /**
    * 管理员名称
    */
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: false, description: '管理员名称' })
   adminName!: string;
 
   /**
    * 管理员密码
    */
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: false, description: '管理员密码' })
   adminPassword!: string;
 }
 
@@ -26,13 +26,13 @@ export class LoginAdminInput {
   /**
    * 管理员名称
    */
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: false, description: '管理员名称' })
   adminName!: string;
 
   /**
    * 管理员密码
    */
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: false, description: '管理员密码' })
   adminPassword!: string;
 }
 
@@ -44,24 +44,33 @@ export class UpdateAdminInput {
   /**
    * 管理员ID
    */
-  @Field(() => Int)
+  @Field(() => Int, { description: '管理员ID' })
   adminId!: number;
 
   /**
    * 管理员名称
    */
-  @Field(() => String, { nullable: true })
+  @Field(() => String, {
+    nullable: true,
+    description: '管理员名称',
+  })
   adminName?: string;
 
   /**
    * 管理员密码
    */
-  @Field(() => String, { nullable: true })
+  @Field(() => String, {
+    nullable: true,
+    description: '管理员密码',
+  })
   adminPassword?: string;
 
   /**
    * 是否激活
    */
-  @Field(() => Boolean, { nullable: true })
+  @Field(() => Boolean, {
+    nullable: true,
+    description: '是否激活',
+  })
   isActive?: boolean;
 }

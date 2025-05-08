@@ -11,41 +11,79 @@ type Admin {
 
   """管理员密码哈希"""
   adminPasswordHash: String!
+
+  """创建时间"""
   created_at: DateTime
 
   """是否激活"""
   isActive: Boolean!
+
+  """最后更新时间"""
   updated_at: DateTime
 }
 
 type AdminResult {
+  """状态码"""
   code: Int!
+
+  """管理员数据列表"""
   data: [Admin!]
+
+  """返回消息"""
   message: String!
 }
 
 type AllDataResult {
+  """状态码"""
   code: Int!
+
+  """网站数据对象"""
   data: Data
+
+  """返回消息"""
   message: String!
 }
 
 type Article {
+  """COS 存储桶名称"""
   article_bucket_name: String!
+
+  """COS 存储桶所在区域"""
   article_bucket_region: String!
+
+  """文章ID"""
   article_id: ID!
+
+  """COS 文件 key"""
   article_key: String!
+
+  """文件名"""
   article_name: String!
+
+  """文章状态"""
   article_status: Int!
+
+  """文章标题"""
   article_title: String!
+
+  """文章浏览量"""
   article_view_count: Int!
+
+  """创建时间"""
   created_at: DateTime
+
+  """最后更新时间"""
   updated_at: DateTime
 }
 
 type ArticleResult {
+  """状态码"""
   code: Int!
+
+  """文章数据列表"""
   data: [Article!]
+
+  """返回消息"""
   message: String!
 }
 
@@ -57,19 +95,39 @@ enum ArticleStatus {
 }
 
 type Comment {
+  """评论内容"""
   commentContent: String!
+
+  """评论邮箱"""
   commentEmail: String
+
+  """评论ID"""
   commentId: ID!
+
+  """评论IP"""
   commentIp: String!
+
+  """评论状态"""
   commentStatus: Int!
+
+  """评论用户名"""
   commentUserName: String!
+
+  """创建时间"""
   created_at: DateTime
+
+  """最后更新时间"""
   updated_at: DateTime
 }
 
 type CommentResult {
+  """状态码"""
   code: Int!
+
+  """评论数据列表"""
   data: [Comment!]
+
+  """返回消息"""
   message: String!
 }
 
@@ -81,36 +139,69 @@ enum CommentStatus {
 }
 
 input CreateAdminInput {
+  """管理员名称"""
   adminName: String!
+
+  """管理员密码"""
   adminPassword: String!
 }
 
 input CreateArticleInput {
+  """COS 存储桶名称"""
   article_bucket_name: String!
+
+  """COS 存储桶区域"""
   article_bucket_region: String!
+
+  """COS 文件 key"""
   article_key: String!
+
+  """文件名"""
   article_name: String!
+
+  """文章标题"""
   article_title: String!
 }
 
 input CreateCommentInput {
+  """评论内容"""
   commentContent: String!
+
+  """评论邮箱"""
   commentEmail: String
+
+  """评论IP"""
   commentIp: String!
+
+  """评论用户名"""
   commentUserName: String!
 }
 
 type Data {
+  """创建时间"""
   createdAt: DateTime!
+
+  """网站数据ID"""
   id: ID!
+
+  """累计点赞数"""
   likeCount: Int!
+
+  """最后统计时间"""
   updatedAt: DateTime!
+
+  """网站总访问量"""
   visitCount: Int!
 }
 
 type DataResult {
+  """状态码"""
   code: Int!
+
+  """网站数据值"""
   data: Int
+
+  """返回消息"""
   message: String!
 }
 
@@ -120,7 +211,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 input LoginAdminInput {
+  """管理员名称"""
   adminName: String!
+
+  """管理员密码"""
   adminPassword: String!
 }
 
@@ -161,39 +255,80 @@ type Query {
 }
 
 type TotalPages {
+  """状态码"""
   code: Int!
+
+  """总页数"""
   data: Int
+
+  """返回消息"""
   message: String!
 }
 
 type TotalPagesOutput {
+  """状态码"""
   code: Int!
+
+  """总页数数据"""
   data: Int
+
+  """返回消息"""
   message: String!
 }
 
 input UpdateAdminInput {
+  """管理员ID"""
   adminId: Int!
+
+  """管理员名称"""
   adminName: String
+
+  """管理员密码"""
   adminPassword: String
+
+  """是否激活"""
   isActive: Boolean
 }
 
 input UpdateArticleInput {
+  """文章ID"""
+  articleId: Int!
+
+  """COS 存储桶名称"""
   article_bucket_name: String
+
+  """COS 存储桶区域"""
   article_bucket_region: String
-  article_id: Int!
+
+  """COS 文件 key"""
   article_key: String
+
+  """文件名"""
   article_name: String
+
+  """文章状态"""
   article_status: ArticleStatus
+
+  """文章标题"""
   article_title: String
 }
 
 input UpdateCommentInput {
+  """评论内容"""
   commentContent: String
+
+  """评论邮箱"""
   commentEmail: String
+
+  """评论ID"""
   commentId: Float!
+
+  """评论IP"""
   commentIp: String
+
+  """评论状态"""
   commentStatus: CommentStatus
+
+  """评论用户名"""
   commentUserName: String
 }

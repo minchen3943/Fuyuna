@@ -9,25 +9,25 @@ export class CreateCommentInput {
   /**
    * 评论用户名
    */
-  @Field(() => String)
+  @Field(() => String, { description: '评论用户名' })
   commentUserName!: string;
 
   /**
    * 评论邮箱
    */
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: '评论邮箱' })
   commentEmail?: string;
 
   /**
    * 评论IP
    */
-  @Field(() => String)
+  @Field(() => String, { description: '评论IP' })
   commentIp!: string;
 
   /**
    * 评论内容
    */
-  @Field(() => String)
+  @Field(() => String, { description: '评论内容' })
   commentContent!: string;
 }
 
@@ -39,37 +39,37 @@ export class UpdateCommentInput {
   /**
    * 评论ID
    */
-  @Field(() => Number)
+  @Field(() => Number, { description: '评论ID' })
   commentId!: number;
 
   /**
    * 评论用户名
    */
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: '评论用户名' })
   commentUserName?: string;
 
   /**
    * 评论邮箱
    */
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: '评论邮箱' })
   commentEmail?: string;
 
   /**
    * 评论IP
    */
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: '评论IP' })
   commentIp?: string;
 
   /**
    * 评论内容
    */
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: '评论内容' })
   commentContent?: string;
 
   /**
    * 评论状态
    */
-  @Field(() => CommentStatus, { nullable: true })
+  @Field(() => CommentStatus, { nullable: true, description: '评论状态' })
   commentStatus?: CommentStatus;
 }
 

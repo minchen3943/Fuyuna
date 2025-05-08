@@ -16,14 +16,14 @@ export class Data {
   /**
    * 网站数据ID
    */
-  @Field(() => ID)
+  @Field(() => ID, { description: '网站数据ID' })
   @PrimaryGeneratedColumn({ name: 'data_id' })
   id!: number;
 
   /**
    * 网站总访问量
    */
-  @Field(() => Int)
+  @Field(() => Int, { description: '网站总访问量' })
   @Column({
     type: 'integer',
     name: 'visit_count',
@@ -35,7 +35,7 @@ export class Data {
   /**
    * 累计点赞数
    */
-  @Field(() => Int)
+  @Field(() => Int, { description: '累计点赞数' })
   @Column({
     type: 'integer',
     name: 'like_count',
@@ -47,7 +47,7 @@ export class Data {
   /**
    * 创建时间
    */
-  @Field(() => Date)
+  @Field(() => Date, { description: '创建时间' })
   @CreateDateColumn({
     type: 'timestamp',
     name: 'created_at',
@@ -59,7 +59,7 @@ export class Data {
   /**
    * 最后统计时间
    */
-  @Field(() => Date)
+  @Field(() => Date, { description: '最后统计时间' })
   @UpdateDateColumn({
     type: 'timestamp',
     name: 'updated_at',
