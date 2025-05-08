@@ -13,6 +13,7 @@ import { ArticleModule } from './article/article.module';
 import { TencentCosModule } from './tencent-cos/tencent-cos.module';
 import { DataModule } from './data/data.module';
 import { RedisModule } from './redis.module';
+import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { RedisModule } from './redis.module';
     ArticleModule,
     TencentCosModule,
     DataModule,
+    CacheModule,
   ],
 
   controllers: [],
