@@ -24,9 +24,6 @@ export class CodeToStatusInterceptor implements NestInterceptor {
         if (typeof response.status === 'function') {
           response.status(value.code);
         }
-        if (value.data === null) {
-          value.data = [];
-        }
         return {
           code: value.code,
           message: value.message,

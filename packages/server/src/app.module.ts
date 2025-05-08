@@ -11,6 +11,7 @@ import { AdminResolver } from './admin/admin.resolver';
 import { AuthModule } from './auth/auth.module';
 import { ArticleModule } from './article/article.module';
 import { TencentCosModule } from './tencent-cos/tencent-cos.module';
+import { DataModule } from './data/data.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { TencentCosModule } from './tencent-cos/tencent-cos.module';
     AuthModule,
     ArticleModule,
     TencentCosModule,
+    DataModule,
   ],
 
   controllers: [],

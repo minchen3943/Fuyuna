@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
 
 export enum CommentStatus {
@@ -57,21 +63,23 @@ export class Comment {
    * 创建时间
    */
   @Field(() => Date, { nullable: true })
-  @Column({
+  @CreateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
     name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP',
+    comment: '创建时间',
   })
   created_at!: Date;
 
   /**
-   * 更新时间
+   * 最后更新时间
    */
   @Field(() => Date, { nullable: true })
-  @Column({
+  @UpdateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
     name: 'updated_at',
+    default: () => 'CURRENT_TIMESTAMP',
+    comment: '最后更新时间',
   })
   updated_at!: Date;
 

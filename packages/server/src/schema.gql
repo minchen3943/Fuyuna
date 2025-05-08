@@ -11,20 +11,22 @@ type Admin {
 
   """管理员密码哈希"""
   adminPasswordHash: String!
-
-  """创建时间"""
-  createdAt: DateTime!
+  created_at: DateTime
 
   """是否激活"""
   isActive: Boolean!
-
-  """更新时间"""
-  updatedAt: DateTime!
+  updated_at: DateTime
 }
 
 type AdminResult {
   code: Int!
   data: [Admin!]
+  message: String!
+}
+
+type AllDataResult {
+  code: Int!
+  data: Data
   message: String!
 }
 
@@ -98,6 +100,20 @@ input CreateCommentInput {
   commentUserName: String!
 }
 
+type Data {
+  createdAt: DateTime!
+  id: ID!
+  likeCount: Int!
+  updatedAt: DateTime!
+  visitCount: Int!
+}
+
+type DataResult {
+  code: Int!
+  data: Int
+  message: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -109,6 +125,8 @@ input LoginAdminInput {
 }
 
 type Mutation {
+  addOneLikeCount: DataResult!
+  addOneVisitCount: DataResult!
   checkAdminPassWord(data: LoginAdminInput!): AdminResult!
   createAdmin(data: CreateAdminInput!): AdminResult!
   createArticle(input: CreateArticleInput!): ArticleResult!
@@ -116,6 +134,8 @@ type Mutation {
   deleteAdmin(adminId: Int!): AdminResult!
   deleteArticle(article_id: Int!): ArticleResult!
   deleteComment(comment_id: Int!): CommentResult!
+  resetLikeCount: DataResult!
+  resetVisitCount: DataResult!
   updateAdmin(data: UpdateAdminInput!): AdminResult!
   updateAdminStatus(adminId: Int!, isActive: Boolean!): AdminResult!
   updateArticle(input: UpdateArticleInput!): ArticleResult!
@@ -135,6 +155,9 @@ type Query {
   findCommentByPage(page: Int!, pageSize: Int!): CommentResult!
   getArticleTotalPages(pageSize: Int!): TotalPages!
   getCommentTotalPages(pageSize: Int!): TotalPagesOutput!
+  getData: AllDataResult!
+  getLikeCount: DataResult!
+  getVisitCount: DataResult!
 }
 
 type TotalPages {

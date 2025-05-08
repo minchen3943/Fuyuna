@@ -133,12 +133,14 @@ COMMENT ON COLUMN fyn_friend_link.link_status IS '状态：0-下线 1-展示';
 -- ------------------------------
 CREATE TABLE fyn_data
 (
+    data_id     SERIAL PRIMARY KEY,
     visit_count INTEGER   DEFAULT 0 CHECK (visit_count >= 0),
     like_count  INTEGER   DEFAULT 0 CHECK (like_count >= 0),
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON TABLE fyn_data IS '网站核心统计指标（单行存储）';
+COMMENT ON COLUMN fyn_data.data_id IS '数据ID';
 COMMENT ON COLUMN fyn_data.visit_count IS '网站总访问量';
 COMMENT ON COLUMN fyn_data.like_count IS '累计点赞数';
 COMMENT ON COLUMN fyn_data.created_at IS '首次统计时间';

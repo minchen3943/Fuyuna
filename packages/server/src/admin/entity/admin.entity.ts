@@ -58,22 +58,26 @@ export class Admin {
   /**
    * 创建时间
    */
-  @Field(() => Date, { description: '创建时间' })
+  @Field(() => Date, { nullable: true })
   @CreateDateColumn({
-    name: 'created_at',
     type: 'timestamp',
+    name: 'created_at',
     default: () => 'CURRENT_TIMESTAMP',
+    comment: '创建时间',
   })
-  createdAt!: Date;
+  created_at!: Date;
 
   /**
-   * 更新时间
+   * 最后更新时间
    */
-  @Field(() => Date, { description: '更新时间' })
+  @Field(() => Date, { nullable: true })
   @UpdateDateColumn({
-    name: 'updated_at',
     type: 'timestamp',
+    name: 'updated_at',
     default: () => 'CURRENT_TIMESTAMP',
+    comment: '最后更新时间',
   })
+  updated_at!: Date;
+
   updatedAt!: Date;
 }
