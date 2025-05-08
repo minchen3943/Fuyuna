@@ -14,6 +14,10 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 export class AdminResolver {
   constructor(private readonly adminService: AdminService) {}
 
+  /**
+   * 查询所有管理员
+   * @returns 管理员结果对象
+   */
   @Query(() => AdminResult)
   async findAllAdmin() {
     const result = await this.adminService.findAll();
@@ -27,6 +31,11 @@ export class AdminResolver {
     return { code: 204, message: 'No admins found', data: [] };
   }
 
+  /**
+   * 根据ID查询管理员
+   * @param id 管理员ID
+   * @returns 管理员结果对象
+   */
   @Query(() => AdminResult, { nullable: true })
   async findAdminById(@Args('id', { type: () => Int }) id: number) {
     const result = await this.adminService.findById(id);
@@ -40,6 +49,11 @@ export class AdminResolver {
     return { code: 204, message: `No admin found with ID ${id}`, data: [] };
   }
 
+  /**
+   * 创建管理员
+   * @param data 创建管理员的输入参数
+   * @returns 管理员结果对象
+   */
   @Mutation(() => AdminResult)
   async createAdmin(@Args('data') data: CreateAdminInput) {
     if (!/^[a-zA-Z0-9_]{5,20}$/.test(data.adminName)) {
@@ -61,8 +75,16 @@ export class AdminResolver {
     return { code: 204, message: `Failed to create admin`, data: [] };
   }
 
+  /**
+   * 更新管理员信息
+   * @param data 更新管理员的输入参数
+   * @returns 管理员结果对象
+   */
   @Mutation(() => AdminResult)
   async updateAdmin(@Args('data') data: UpdateAdminInput) {
+    if (!(await this.findAdminById(data.adminId))) {
+      return null;
+    }
     const result = await this.adminService.update(data);
     if (result) {
       return {
@@ -78,6 +100,12 @@ export class AdminResolver {
     };
   }
 
+  /**
+   * 更新管理员状态
+   * @param adminId 管理员ID
+   * @param isActive 是否激活
+   * @returns 管理员结果对象
+   */
   @Mutation(() => AdminResult)
   async updateAdminStatus(
     @Args('adminId', { type: () => Int }) adminId: number,
@@ -91,6 +119,11 @@ export class AdminResolver {
     };
   }
 
+  /**
+   * 删除管理员
+   * @param adminId 管理员ID
+   * @returns 管理员结果对象
+   */
   @Mutation(() => AdminResult)
   async deleteAdmin(@Args('adminId', { type: () => Int }) adminId: number) {
     const result = await this.adminService.remove(adminId);
@@ -108,6 +141,11 @@ export class AdminResolver {
     };
   }
 
+  /**
+   * 校验管理员密码
+   * @param data 登录管理员的输入参数
+   * @returns 管理员结果对象
+   */
   @Mutation(() => AdminResult)
   async checkAdminPassWord(@Args('data') data: LoginAdminInput) {
     const result = await this.adminService.checkAdminPassWord(data);

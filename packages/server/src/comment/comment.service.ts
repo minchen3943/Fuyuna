@@ -118,6 +118,9 @@ export class CommentService {
    * @returns {Promise<Comment|null>} 更新后的评论或null
    */
   async update(data: UpdateCommentInput): Promise<Comment | null> {
+    if (!(await this.findById(data.commentId))) {
+      return null;
+    }
     const result = await this.commentRepo.save({ ...data });
     if (result) {
       this.logger.log(`Comment updated successfully with ID ${data.commentId}`);
@@ -139,6 +142,9 @@ export class CommentService {
     commentId: number,
     commentStatus: number,
   ): Promise<Comment | null> {
+    if (!(await this.findById(commentId))) {
+      return null;
+    }
     const result = await this.commentRepo.save({ commentId, commentStatus });
     if (result) {
       this.logger.log(

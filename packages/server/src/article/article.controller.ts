@@ -17,6 +17,11 @@ interface ValidUploadFile {
   originalname: string;
 }
 
+/**
+ * 判断文件是否为有效上传文件
+ * @param file 待校验对象
+ * @returns 是否为 ValidUploadFile 类型
+ */
 function isValidUploadFile(file: unknown): file is ValidUploadFile {
   return (
     !!file &&
@@ -28,13 +33,27 @@ function isValidUploadFile(file: unknown): file is ValidUploadFile {
   );
 }
 
+/**
+ * 文章控制器
+ * @remarks 提供文章相关的上传等接口
+ */
 @Controller('article')
 export class ArticleController {
+  /**
+   * 构造函数，注入 ArticleService 和 TencentCosService
+   * @param articleService 文章服务实例
+   * @param tencentCosService 腾讯云 COS 服务实例
+   */
   constructor(
     private readonly tencentCosService: TencentCosService,
     private readonly articleService: ArticleService,
   ) {}
 
+  /**
+   * 上传文章文件到 COS
+   * @param file 上传的文件
+   * @returns 上传结果
+   */
   @Post('upload')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
@@ -45,7 +64,8 @@ export class ArticleController {
     if (!isValidUploadFile(file)) {
       return {
         code: 400,
-        message: '无效的文件上传',
+        message: '无效的文件',
+        data: null,
       };
     }
     const stream = new PassThrough();

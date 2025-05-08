@@ -19,6 +19,10 @@ export class AdminService {
     private readonly adminRepo: Repository<Admin>,
   ) {}
 
+  /**
+   * 查询所有管理员信息
+   * @returns 管理员数组或 null
+   */
   public async findAll(): Promise<Admin[] | null> {
     const admins = await this.adminRepo.find();
     if (admins.length > 0) {
@@ -29,6 +33,11 @@ export class AdminService {
     return null;
   }
 
+  /**
+   * 根据管理员ID查询管理员信息
+   * @param id 管理员ID
+   * @returns 管理员实体或 null
+   */
   public async findById(id: number): Promise<Admin | null> {
     const admin = await this.adminRepo.findOneBy({ adminId: id });
     if (admin) {
@@ -39,10 +48,20 @@ export class AdminService {
     return null;
   }
 
+  /**
+   * 根据管理员名称查询管理员信息
+   * @param name 管理员名称
+   * @returns 管理员实体或 null
+   */
   public async findByName(name: string): Promise<Admin | null> {
     return await this.adminRepo.findOneBy({ adminName: name });
   }
 
+  /**
+   * 创建管理员
+   * @param input 创建管理员输入参数
+   * @returns 创建后的管理员实体或 null
+   */
   public async create(input: CreateAdminInput): Promise<Admin | null> {
     const admin = this.adminRepo.create({
       adminName: input.adminName,
@@ -58,6 +77,11 @@ export class AdminService {
     }
   }
 
+  /**
+   * 更新管理员信息
+   * @param input 更新管理员输入参数
+   * @returns 更新后的管理员实体或 null
+   */
   public async update(input: UpdateAdminInput): Promise<Admin | null> {
     const admin = await this.adminRepo.findOneBy({ adminId: input.adminId });
     if (!admin) {
@@ -83,14 +107,28 @@ export class AdminService {
     }
   }
 
+  /**
+   * 更新管理员激活状态
+   * @param id 管理员ID
+   * @param isActive 是否激活
+   * @returns 更新后的管理员实体或 null
+   */
   public async updateActive(
     id: number,
     isActive: boolean,
   ): Promise<Admin | null> {
+    if (!(await this.findById(id))) {
+      return null;
+    }
     await this.adminRepo.update(id, { isActive });
     return this.findById(id);
   }
 
+  /**
+   * 删除管理员
+   * @param id 管理员ID
+   * @returns 是否删除成功
+   */
   public async remove(id: number): Promise<boolean> {
     const result = await this.adminRepo.delete(id);
     if (result.affected === 1) {
@@ -102,6 +140,11 @@ export class AdminService {
     }
   }
 
+  /**
+   * 校验管理员密码
+   * @param data 登录输入参数
+   * @returns 密码是否正确
+   */
   public async checkAdminPassWord(data: LoginAdminInput): Promise<boolean> {
     const correctUser = await this.adminRepo.findOneBy({
       adminName: data.adminName,

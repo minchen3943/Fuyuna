@@ -9,11 +9,20 @@ import {
 
 @ObjectType()
 @Entity('fyn_admin')
+/**
+ * 管理员实体
+ */
 export class Admin {
+  /**
+   * 管理员ID
+   */
   @Field(() => Int, { description: '管理员ID' })
   @PrimaryGeneratedColumn({ name: 'admin_id' })
   adminId!: number;
 
+  /**
+   * 管理员名称
+   */
   @Field(() => String, { description: '管理员名称' })
   @Column({
     name: 'admin_name',
@@ -23,6 +32,9 @@ export class Admin {
   })
   adminName!: string;
 
+  /**
+   * 管理员密码哈希
+   */
   @Field(() => String, { description: '管理员密码哈希' })
   @Column({
     name: 'admin_password_hash',
@@ -31,6 +43,9 @@ export class Admin {
   })
   adminPasswordHash!: string;
 
+  /**
+   * 是否激活
+   */
   @Field(() => Boolean, { description: '是否激活', defaultValue: true })
   @Column({
     name: 'is_active',
@@ -40,6 +55,9 @@ export class Admin {
   })
   isActive!: boolean;
 
+  /**
+   * 创建时间
+   */
   @Field(() => Date, { description: '创建时间' })
   @CreateDateColumn({
     name: 'created_at',
@@ -48,6 +66,9 @@ export class Admin {
   })
   createdAt!: Date;
 
+  /**
+   * 更新时间
+   */
   @Field(() => Date, { description: '更新时间' })
   @UpdateDateColumn({
     name: 'updated_at',

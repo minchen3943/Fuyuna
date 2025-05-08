@@ -22,6 +22,11 @@ import {
 @Injectable()
 export class ArticleService {
   private readonly logger = new Logger(ArticleService.name);
+
+  /**
+   * 构造函数，注入 Article 仓库
+   * @param articleRepository 文章实体仓库
+   */
   constructor(
     @InjectRepository(Article)
     private readonly articleRepo: Repository<Article>,
@@ -126,12 +131,15 @@ export class ArticleService {
    * @returns {Promise<Article|null>} 更新后的文章或null
    */
   async update(data: UpdateArticleInput): Promise<Article | null> {
+    if (!(await this.findById(data.article_id))) {
+      return null;
+    }
     const result = await this.articleRepo.save({ ...data });
     if (result) {
       this.logger.log(
         `Article updated successfully with ID ${data.article_id}`,
       );
-      return this.articleRepo.findOneBy({ article_id: data.article_id });
+      return await this.articleRepo.findOneBy({ article_id: data.article_id });
     } else {
       this.logger.warn(`Failed to update article with ID ${data.article_id}`);
       return null;
@@ -149,9 +157,11 @@ export class ArticleService {
     articleId: number,
     articleStatus: number,
   ): Promise<Article | null> {
+    if (!(await this.findById(articleId))) {
+      return null;
+    }
     const result = await this.articleRepo.save({
-      article_id: articleId,
-      article_status: articleStatus,
+      ...{ article_id: articleId, article_status: articleStatus },
     });
     if (result) {
       this.logger.log(

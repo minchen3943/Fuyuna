@@ -12,6 +12,11 @@ export class AuthController {
 
   @Post('admin/token')
   @Public()
+  /**
+   * 管理员登录方法
+   * @param data - 包含管理员用户名和密码的请求体
+   * @returns 包含状态码、消息和访问令牌的数据对象
+   */
   async adminLogin(@Body() data: AdminAuthPayLoadDto) {
     if (!data || !data.adminName || !data.adminPassword) {
       return { code: 400, message: `Request body error`, data: null };
@@ -34,6 +39,11 @@ export class AuthController {
   }
 
   @Get('admin/token')
+  /**
+   * 检查管理员令牌的有效性
+   * @param req - Express 请求对象
+   * @returns 包含状态码、消息和用户数据的数据对象
+   */
   checkToken(@Req() req: Request) {
     if (req.user) {
       return {
