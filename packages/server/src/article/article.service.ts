@@ -4,11 +4,13 @@
  * @module ArticleService
  */
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from './entity/article.entity';
 import { CreateArticleInput, UpdateArticleInput } from './input/article.input';
+import Redis from 'ioredis';
+import { REDIS_CLIENT } from 'src/constants';
 
 /**
  * @class ArticleService
@@ -22,18 +24,31 @@ export class ArticleService {
   /**
    * 构造函数，注入 Article 仓库
    * @param articleRepository 文章实体仓库
+   * @param redis 缓存实例
    */
   constructor(
     @InjectRepository(Article)
     private readonly articleRepo: Repository<Article>,
+    @Inject(REDIS_CLIENT)
+    private readonly redis: Redis,
   ) {}
 
   /**
-   * @method findAll
-   * @description 查询所有文章
-   * @returns {Promise<Article[]|null>} 文章数组或null
+   * 查询所有文章（优先缓存）
+   * @returns {Promise<Article[] | null>} 文章数组或 null
    */
   async findAll(): Promise<Article[] | null> {
+    const key = 'article:all';
+    const cached = await this.redis.get(key);
+    if (cached) {
+      const articles = JSON.parse(cached) as Article[];
+      articles.forEach((article) => {
+        article.created_at = new Date(article.created_at);
+      });
+      this.logger.log(`(cache) Found ${articles.length} articles`);
+      this.logger.debug(`(cache) Articles: ${JSON.stringify(articles)}`);
+      return articles;
+    }
     const articles = await this.articleRepo.find({
       where: { article_status: 1 },
       order: { created_at: 'DESC' },
@@ -41,6 +56,7 @@ export class ArticleService {
     if (articles.length > 0) {
       this.logger.log(`Found ${articles.length} articles`);
       this.logger.debug(`Articles: ${JSON.stringify(articles)}`);
+      await this.redis.set(key, JSON.stringify(articles), 'EX', 18000);
       return articles;
     } else {
       this.logger.warn('No articles found');
@@ -55,10 +71,20 @@ export class ArticleService {
    * @returns {Promise<Article|null>} 文章对象或null
    */
   async findById(articleId: number): Promise<Article | null> {
+    const key = `article:id:${articleId}`;
+    const cached = await this.redis.get(key);
+    if (cached) {
+      const article = JSON.parse(cached) as Article;
+      article.created_at = new Date(article.created_at);
+      this.logger.log(`(cache) Found article with ID ${articleId}`);
+      this.logger.debug(`(cache) Article: ${JSON.stringify(article)}`);
+      return article;
+    }
     const article = await this.articleRepo.findOneBy({ article_id: articleId });
     if (article) {
       this.logger.log(`Found article with ID ${articleId}`);
       this.logger.debug(`Article: ${JSON.stringify(article)}`);
+      await this.redis.set(key, JSON.stringify(article), 'EX', 18000);
       return article;
     } else {
       this.logger.warn(`No article found with ID ${articleId}`);
@@ -68,12 +94,25 @@ export class ArticleService {
 
   /**
    * @method findByPage
-   * @description 分页查询文章
+   * @description 分页查询文章，带 Redis 缓存
    * @param {number} page - 页码
    * @param {number} pageSize - 每页数量
    * @returns {Promise<Article[]|null>} 文章数组或null
    */
   async findByPage(page: number, pageSize: number): Promise<Article[] | null> {
+    const key = `article:page:${page}:${pageSize}`;
+    const cached = await this.redis.get(key);
+    if (cached) {
+      const articles = JSON.parse(cached) as Article[];
+      articles.forEach((article) => {
+        article.created_at = new Date(article.created_at);
+      });
+      this.logger.log(
+        `(cache) Found ${articles.length} articles on page ${page}`,
+      );
+      this.logger.debug(`(cache) Articles: ${JSON.stringify(articles)}`);
+      return articles;
+    }
     const articles = await this.articleRepo.find({
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -81,6 +120,7 @@ export class ArticleService {
       order: { created_at: 'DESC' },
     });
     if (articles.length > 0) {
+      await this.redis.set(key, JSON.stringify(articles), 'EX', 18000);
       this.logger.log(`Found ${articles.length} articles on page ${page}`);
       this.logger.debug(`Articles: ${JSON.stringify(articles)}`);
       return articles;
@@ -92,12 +132,24 @@ export class ArticleService {
 
   /**
    * @method getTotalPages
-   * @description 计算总页数
+   * @description 计算总页数，带 Redis 缓存
    * @param {number} pageSize - 每页数量
    * @returns {Promise<{totalPages: number}>} 包含总页数的对象
    */
   async getTotalPages(pageSize: number): Promise<{ totalPages: number }> {
+    const key = `article:totalPage:${pageSize}`;
+    const cached = await this.redis.get(key);
+    if (cached) {
+      const totalArticles = JSON.parse(cached) as number;
+      const totalPages = Math.ceil(totalArticles / pageSize);
+      this.logger.log(
+        `(cache) Total pages: ${totalPages} for page size ${pageSize}`,
+      );
+      this.logger.debug(`Total articles: ${totalArticles}`);
+      return { totalPages };
+    }
     const totalArticles = await this.articleRepo.count();
+    await this.redis.set(key, JSON.stringify(totalArticles), 'EX', 18000);
     const totalPages = Math.ceil(totalArticles / pageSize);
     this.logger.log(`Total pages: ${totalPages} for page size ${pageSize}`);
     this.logger.debug(`Total articles: ${totalArticles}`);

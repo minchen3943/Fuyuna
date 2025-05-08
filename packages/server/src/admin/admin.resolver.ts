@@ -1,11 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { AdminResult } from './entity/adminResult.entity';
 import { AdminService } from './admin.service';
-import {
-  CreateAdminInput,
-  LoginAdminInput,
-  UpdateAdminInput,
-} from './input/admin.input';
+import { CreateAdminInput, UpdateAdminInput } from './input/admin.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
@@ -137,28 +133,6 @@ export class AdminResolver {
     return {
       code: 204,
       message: `Failed to delete Admin with ID ${adminId}`,
-      data: [],
-    };
-  }
-
-  /**
-   * 校验管理员密码
-   * @param data 登录管理员的输入参数
-   * @returns 管理员结果对象
-   */
-  @Mutation(() => AdminResult)
-  async checkAdminPassWord(@Args('data') data: LoginAdminInput) {
-    const result = await this.adminService.checkAdminPassWord(data);
-    if (result === true) {
-      return {
-        code: 200,
-        message: `Admin password is correct`,
-        data: [],
-      };
-    }
-    return {
-      code: 401,
-      message: `Admin name or password is incorrect`,
       data: [],
     };
   }

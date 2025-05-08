@@ -83,7 +83,7 @@ export class CommentResolver {
       return {
         code: 200,
         message: 'Total pages calculated',
-        data: [result.totalPages],
+        data: result.totalPages,
       };
     }
     return { code: 204, message: 'No comments found', data: [] };

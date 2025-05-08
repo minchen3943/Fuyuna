@@ -29,18 +29,19 @@ export class AuthService {
   public async validateAdmin(
     data: AdminAuthPayLoadDto,
   ): Promise<string | null> {
-    if (!(await this.adminService.findByName(data.adminName))) {
-      this.logger.error(`Fail to found admin with ${data.adminName}`);
+    const admin = await this.adminService.findByName(data.adminName);
+    if (!admin) {
+      this.logger.warn(`Fail to found admin with ${data.adminName}`);
       return null;
     }
-    if (await this.adminService.checkAdminPassWord(data)) {
+    if (await this.adminService.checkAdminPassWord(admin, data.adminPassword)) {
       const payload = { username: data.adminName };
       const access_token = await this.jwtService.signAsync(payload);
       this.logger.log(`Admin get access_token succeed with ${data.adminName}`);
       this.logger.debug(`Access_token: ${access_token}`);
       return access_token;
     }
-    this.logger.error(`Admin fail to get access_token with ${data.adminName}`);
+    this.logger.warn(`Admin fail to get access_token with ${data.adminName}`);
     return null;
   }
 }

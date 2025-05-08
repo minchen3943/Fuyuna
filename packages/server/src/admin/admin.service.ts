@@ -1,13 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './entity/admin.entity';
 import { Repository } from 'typeorm';
-import {
-  CreateAdminInput,
-  LoginAdminInput,
-  UpdateAdminInput,
-} from './input/admin.input';
+import { CreateAdminInput, UpdateAdminInput } from './input/admin.input';
 import * as bcrypt from 'bcryptjs';
+import Redis from 'ioredis';
+import { REDIS_CLIENT } from 'src/constants';
 
 @Injectable()
 export class AdminService {
@@ -17,6 +15,8 @@ export class AdminService {
   constructor(
     @InjectRepository(Admin)
     private readonly adminRepo: Repository<Admin>,
+    @Inject(REDIS_CLIENT)
+    private readonly redis: Redis,
   ) {}
 
   /**
@@ -24,10 +24,23 @@ export class AdminService {
    * @returns 管理员数组或 null
    */
   public async findAll(): Promise<Admin[] | null> {
+    const key = `user:all`;
+    const cached = await this.redis.get(key);
+    if (cached) {
+      const admins = JSON.parse(cached) as Admin[];
+      admins.forEach((admin) => {
+        admin.created_at = new Date(admin.created_at);
+        admin.updated_at = new Date(admin.updated_at);
+      });
+      this.logger.log(`(cache) Found ${admins.length} admins`);
+      this.logger.debug(`(cache) Admins: ${JSON.stringify(admins)}`);
+      return admins;
+    }
     const admins = await this.adminRepo.find();
     if (admins.length > 0) {
       this.logger.log(`Found ${admins.length} admins`);
       this.logger.debug(`Admins: ${JSON.stringify(admins)}`);
+      await this.redis.set(key, JSON.stringify(admins), 'EX', 18000);
       return admins;
     }
     this.logger.warn('No admins found');
@@ -40,10 +53,21 @@ export class AdminService {
    * @returns 管理员实体或 null
    */
   public async findById(id: number): Promise<Admin | null> {
+    const key = `user:id:${id}`;
+    const cached = await this.redis.get(key);
+    if (cached) {
+      const admin = JSON.parse(cached) as Admin;
+      admin.created_at = new Date(admin.created_at);
+      admin.updated_at = new Date(admin.updated_at);
+      this.logger.log(`(cache) Found admin with ID ${id}`);
+      this.logger.debug(`(cache) Admin: ${JSON.stringify(admin)}`);
+      return admin;
+    }
     const admin = await this.adminRepo.findOneBy({ adminId: id });
     if (admin) {
       this.logger.log(`Found admin with ID ${id}`);
       this.logger.debug(`Admin: ${JSON.stringify(admin)}`);
+      await this.redis.set(key, JSON.stringify(admin), 'EX', 18000);
       return admin;
     }
     this.logger.warn(`No admin found with ID ${id}`);
@@ -56,7 +80,25 @@ export class AdminService {
    * @returns 管理员实体或 null
    */
   public async findByName(name: string): Promise<Admin | null> {
-    return await this.adminRepo.findOneBy({ adminName: name });
+    const key = `user:name:${name}`;
+    const cached = await this.redis.get(key);
+    if (cached) {
+      const admin = JSON.parse(cached) as Admin;
+      admin.created_at = new Date(admin.created_at);
+      admin.updated_at = new Date(admin.updated_at);
+      this.logger.log(`(cache) Found admin with NAME ${name}`);
+      this.logger.debug(`(cache) Admin: ${JSON.stringify(admin)}`);
+      return admin;
+    }
+    const admin = await this.adminRepo.findOneBy({ adminName: name });
+    if (admin) {
+      this.logger.log(`Found admin with NAME ${name}`);
+      this.logger.debug(`Admin: ${JSON.stringify(admin)}`);
+      await this.redis.set(key, JSON.stringify(admin), 'EX', 18000);
+      return admin;
+    }
+    this.logger.warn(`No admin found with NAME ${name}`);
+    return null;
   }
 
   /**
@@ -150,16 +192,12 @@ export class AdminService {
    * @param data 登录输入参数
    * @returns 密码是否正确
    */
-  public async checkAdminPassWord(data: LoginAdminInput): Promise<boolean> {
-    const correctUser = await this.adminRepo.findOneBy({
-      adminName: data.adminName,
-    });
-    if (!correctUser) {
-      throw new Error(`No admin found with NAME ${data.adminName}`);
-    }
-    this.logger.log(`Admin found with NAME ${data.adminName}`);
+  public async checkAdminPassWord(
+    admin: Admin,
+    adminPassword: string,
+  ): Promise<boolean> {
     return Promise.resolve(
-      await bcrypt.compare(data.adminPassword, correctUser.adminPasswordHash),
+      await bcrypt.compare(adminPassword, admin.adminPasswordHash),
     );
   }
 

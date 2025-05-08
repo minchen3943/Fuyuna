@@ -12,10 +12,12 @@ import { AuthModule } from './auth/auth.module';
 import { ArticleModule } from './article/article.module';
 import { TencentCosModule } from './tencent-cos/tencent-cos.module';
 import { DataModule } from './data/data.module';
+import { RedisModule } from './redis.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -37,6 +39,7 @@ import { DataModule } from './data/data.module';
       }),
     }),
 
+    RedisModule,
     CommentModule,
     AdminModule,
     AuthModule,
