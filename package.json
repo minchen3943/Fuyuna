@@ -7,12 +7,8 @@
   "scripts": {
     "start:client": "pnpm --filter @fuyuna/client dev",
     "start:server": "pnpm --filter @fuyuna/server start:dev",
-    "start:admin-h5": "pnpm --filter @fuyuna/admin dev:h5",
-    "start:admin-mp": "pnpm --filter @fuyuna/admin dev:mp-weixin",
     "build:client": "pnpm --filter @fuyuna/client build",
-    "build:server": "pnpm --filter @fuyuna/server build",
-    "build:admin-h5": "pnpm --filter @fuyuna/admin build:h5",
-    "build:admin-mp": "pnpm --filter @fuyuna/admin build:mp-weixin"
+    "build:server": "pnpm --filter @fuyuna/server build"
   },
   "devDependencies": {
     "eslint-config-prettier": "^10.1.2",
