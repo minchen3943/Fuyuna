@@ -158,6 +158,10 @@ export class CommentService {
     const comment = this.commentRepo.create(data);
     const result = await this.commentRepo.save(comment);
     if (result) {
+      await this.redis.del('comment:all');
+      await this.redis.del('comment:page:*');
+      await this.redis.del('comment:totalPage:*');
+      await this.redis.del(`comment:id:${result.commentId}`);
       this.logger.log(
         `Comment created successfully with ID ${result.commentId}`,
       );
@@ -181,9 +185,13 @@ export class CommentService {
     }
     const result = await this.commentRepo.save({ ...data });
     if (result) {
+      await this.redis.del(`comment:id:${data.commentId}`);
+      await this.redis.del('comment:all');
+      await this.redis.del('comment:page:*');
+      const final = await this.findById(data.commentId);
       this.logger.log(`Comment updated successfully with ID ${data.commentId}`);
-      this.logger.debug(`Updated comment: ${JSON.stringify(result)}`);
-      return this.commentRepo.findOneBy({ commentId: data.commentId });
+      this.logger.debug(`Updated comment: ${JSON.stringify(final)}`);
+      return final;
     } else {
       this.logger.warn(`Failed to update comment with ID ${data.commentId}`);
       return null;
@@ -206,11 +214,14 @@ export class CommentService {
     }
     const result = await this.commentRepo.save({ commentId, commentStatus });
     if (result) {
+      await this.redis.del(`comment:id:${commentId}`);
+      await this.redis.del('comment:all');
+      await this.redis.del('comment:page:*');
       this.logger.log(
         `Comment status updated successfully for ID ${commentId}`,
       );
       this.logger.debug(`Updated comment status: ${JSON.stringify(result)}`);
-      return this.commentRepo.findOneBy({ commentId: commentId });
+      return this.findById(commentId);
     } else {
       this.logger.warn(`Failed to update comment status for ID ${commentId}`);
       return null;
@@ -226,6 +237,10 @@ export class CommentService {
   async remove(commentId: number): Promise<boolean> {
     const result = await this.commentRepo.delete(commentId);
     if (result.affected === 1) {
+      await this.redis.del(`comment:id:${commentId}`);
+      await this.redis.del('comment:all');
+      await this.redis.del('comment:page:*');
+      await this.redis.del('comment:totalPage:*');
       this.logger.log(`Comment deleted successfully with ID ${commentId}`);
       this.logger.debug(`Deleted comment ID: ${commentId}`);
       return Promise.resolve(true);

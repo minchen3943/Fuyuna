@@ -110,6 +110,6 @@ export class DeleteArticleInput {
   /**
    * 文章ID
    */
-  @Field(() => Int, { description: '文章ID（删除指定文章）' })
+  @Field(() => Int, { description: '文章ID' })
   article_id!: number;
 }

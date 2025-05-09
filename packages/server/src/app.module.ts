@@ -14,6 +14,7 @@ import { TencentCosModule } from './tencent-cos/tencent-cos.module';
 import { DataModule } from './data/data.module';
 import { RedisModule } from './redis.module';
 import { CacheModule } from './cache/cache.module';
+import { FriendLinkModule } from './friend-link/friend-link.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { CacheModule } from './cache/cache.module';
     TencentCosModule,
     DataModule,
     CacheModule,
+    FriendLinkModule,
   ],
 
   controllers: [],

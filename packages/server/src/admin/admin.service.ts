@@ -113,6 +113,9 @@ export class AdminService {
     });
     const result = await this.adminRepo.save(admin);
     if (result) {
+      await this.redis.del(`user:all`);
+      await this.redis.del(`user:name:${input.adminName}`);
+      await this.redis.del(`user:id:${result.adminId}`);
       this.logger.log(`Admin created successfully with ID ${result.adminId}`);
       this.logger.debug(`Admin: ${JSON.stringify(result)}`);
       return result;
@@ -144,9 +147,13 @@ export class AdminService {
     }
     const result = await this.adminRepo.save(admin);
     if (result) {
+      await this.redis.del(`user:all`);
+      await this.redis.del(`user:name:${admin.adminName}`);
+      await this.redis.del(`user:id:${admin.adminId}`);
+      const final = await this.findById(admin.adminId);
       this.logger.log(`Admin updated successfully with ID ${admin.adminId}`);
-      this.logger.debug(`Admin: ${JSON.stringify(result)}`);
-      return this.findById(admin.adminId);
+      this.logger.debug(`Admin: ${JSON.stringify(final)}`);
+      return final;
     } else {
       this.logger.warn(`Failed to update Admin with ID ${admin.adminId}`);
       return null;
@@ -167,6 +174,14 @@ export class AdminService {
       return null;
     }
     await this.adminRepo.update(id, { isActive });
+    await this.redis.del(`user:all`);
+    await this.redis.del(`user:id:${id}`);
+    this.logger.log(
+      `Updated admin active status id=${id} isActive=${isActive}`,
+    );
+    this.logger.debug(
+      `Updated admin active status: ${JSON.stringify(isActive)}`,
+    );
     return this.findById(id);
   }
 
@@ -178,6 +193,9 @@ export class AdminService {
   public async remove(id: number): Promise<boolean> {
     const result = await this.adminRepo.delete(id);
     if (result.affected === 1) {
+      await this.redis.del(`user:all`);
+      await this.redis.del(`user:id:${id}`);
+      await this.redis.del(`user:name:${id}`);
       this.logger.log(`Admin deleted successfully with ID ${id}`);
       this.logger.debug(`Result: ${JSON.stringify(result)}`);
       return Promise.resolve(true);

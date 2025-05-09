@@ -166,6 +166,10 @@ export class ArticleService {
     const article = this.articleRepo.create(data);
     const result = await this.articleRepo.save(article);
     if (result) {
+      await this.redis.del('article:all');
+      await this.redis.del(`article:page:*`);
+      await this.redis.del(`article:totalPage:*`);
+      await this.redis.del(`article:id:${result.article_id}`);
       this.logger.log(
         `Article created successfully with ID ${result.article_id}`,
       );
@@ -189,9 +193,14 @@ export class ArticleService {
     }
     const result = await this.articleRepo.save({ ...data });
     if (result) {
+      await this.redis.del(`article:id:${data.articleId}`);
+      await this.redis.del('article:all');
+      await this.redis.del(`article:page:*`);
+      await this.redis.del(`article:totalPage:*`);
+      const final = await this.findById(data.articleId);
       this.logger.log(`Article updated successfully with ID ${data.articleId}`);
-      this.logger.debug(`Updated article: ${JSON.stringify(result)}`);
-      return await this.articleRepo.findOneBy({ article_id: data.articleId });
+      this.logger.debug(`Updated article: ${JSON.stringify(final)}`);
+      return final;
     } else {
       this.logger.warn(`Failed to update article with ID ${data.articleId}`);
       return null;
@@ -216,11 +225,15 @@ export class ArticleService {
       ...{ article_id: articleId, article_status: articleStatus },
     });
     if (result) {
+      await this.redis.del(`article:id:${articleId}`);
+      await this.redis.del('article:all');
+      await this.redis.del(`article:page:*`);
+      await this.redis.del(`article:totalPage:*`);
       this.logger.log(
         `Article status updated successfully for ID ${articleId}`,
       );
       this.logger.debug(`Updated article status: ${articleStatus}`);
-      return this.articleRepo.findOneBy({ article_id: articleId });
+      return this.findById(articleId);
     } else {
       this.logger.warn(`Failed to update article status for ID ${articleId}`);
       return null;
@@ -236,6 +249,10 @@ export class ArticleService {
   async remove(articleId: number): Promise<boolean> {
     const result = await this.articleRepo.delete(articleId);
     if (result.affected === 1) {
+      await this.redis.del(`article:id:${articleId}`);
+      await this.redis.del('article:all');
+      await this.redis.del(`article:page:*`);
+      await this.redis.del(`article:totalPage:*`);
       this.logger.log(`Article deleted successfully with ID ${articleId}`);
       this.logger.debug(`Deleted article ID: ${articleId}`);
       return Promise.resolve(true);
