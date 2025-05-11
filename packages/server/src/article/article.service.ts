@@ -76,6 +76,7 @@ export class ArticleService {
     if (cached) {
       const article = JSON.parse(cached) as Article;
       article.created_at = new Date(article.created_at);
+      article.updated_at = new Date(article.updated_at);
       this.logger.log(`(cache) Found article with ID ${articleId}`);
       this.logger.debug(`(cache) Article: ${JSON.stringify(article)}`);
       return article;
@@ -188,10 +189,25 @@ export class ArticleService {
    * @returns {Promise<Article|null>} 更新后的文章或null
    */
   async update(data: UpdateArticleInput): Promise<Article | null> {
-    if (!(await this.findById(data.articleId))) {
+    const article = await this.findById(data.articleId);
+    if (!article) {
       return null;
     }
-    const result = await this.articleRepo.save({ ...data });
+    const fields: (keyof Article & keyof UpdateArticleInput)[] = [
+      'article_status',
+      'article_title',
+      'article_bucket_name',
+      'article_bucket_region',
+      'article_bucket_key',
+    ];
+
+    fields.forEach((key) => {
+      if (data[key] !== undefined && data[key] !== null) {
+        (article as Record<typeof key, any>)[key] = data[key];
+      }
+    });
+
+    const result = await this.articleRepo.save({ ...article });
     if (result) {
       await this.redis.del(`article:id:${data.articleId}`);
       await this.redis.del('article:all');

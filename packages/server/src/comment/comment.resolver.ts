@@ -133,15 +133,17 @@ export class CommentResolver {
   @Mutation(() => CommentResult)
   @UseGuards(JwtAuthGuard)
   async updateComment(@Args('input') data: UpdateCommentInput) {
-    if (
-      typeof data.commentStatus !== 'number' ||
-      !Object.values(CommentStatus).includes(data.commentStatus)
-    ) {
-      return {
-        code: 400,
-        message: 'Invalid comment_status value',
-        data: null,
-      };
+    if (data.commentStatus) {
+      if (
+        typeof data.commentStatus !== 'number' ||
+        !Object.values(CommentStatus).includes(data.commentStatus)
+      ) {
+        return {
+          code: 400,
+          message: 'Invalid comment_status value',
+          data: null,
+        };
+      }
     }
     const result = await this.commentService.update(data);
     if (result) {

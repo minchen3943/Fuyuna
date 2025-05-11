@@ -83,22 +83,10 @@ export class Article {
   @Column({
     length: 500,
     nullable: false,
-    name: 'article_key',
+    name: 'article_bucket_key',
     comment: 'COS 文件 key',
   })
-  article_key!: string;
-
-  /**
-   * 文件名
-   */
-  @Field(() => String, { nullable: false, description: '文件名' })
-  @Column({
-    length: 100,
-    nullable: false,
-    name: 'article_name',
-    comment: '文件名',
-  })
-  article_name!: string;
+  article_bucket_key!: string;
 
   /**
    * 创建时间

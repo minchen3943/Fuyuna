@@ -45,6 +45,9 @@ type AllDataResult {
 }
 
 type Article {
+  """COS 文件 key"""
+  article_bucket_key: String!
+
   """COS 存储桶名称"""
   article_bucket_name: String!
 
@@ -53,12 +56,6 @@ type Article {
 
   """文章ID"""
   article_id: ID!
-
-  """COS 文件 key"""
-  article_key: String!
-
-  """文件名"""
-  article_name: String!
 
   """文章状态"""
   article_status: Int!
@@ -133,9 +130,9 @@ type CommentResult {
 
 """评论状态枚举"""
 enum CommentStatus {
-  Abnormal
-  Approved
-  Pending
+  Hidden
+  Public
+  Reviewing
 }
 
 input CreateAdminInput {
@@ -147,17 +144,14 @@ input CreateAdminInput {
 }
 
 input CreateArticleInput {
+  """COS 文件 key"""
+  article_bucket_key: String!
+
   """COS 存储桶名称"""
   article_bucket_name: String!
 
   """COS 存储桶区域"""
   article_bucket_region: String!
-
-  """COS 文件 key"""
-  article_key: String!
-
-  """文件名"""
-  article_name: String!
 
   """文章标题"""
   article_title: String!
@@ -210,6 +204,40 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type FriendLink {
+  """创建时间"""
+  created_at: DateTime!
+
+  """链接描述"""
+  link_description: String
+
+  """链接ID"""
+  link_id: ID!
+
+  """友链状态"""
+  link_status: Int!
+
+  """链接标题"""
+  link_title: String!
+
+  """URL地址"""
+  link_url: String!
+
+  """最后修改时间"""
+  updated_at: DateTime!
+}
+
+type FriendLinkResult {
+  """状态码"""
+  code: Int!
+
+  """友链数据列表"""
+  data: [FriendLink!]
+
+  """返回消息"""
+  message: String!
+}
+
 type Mutation {
   addOneLikeCount: DataResult!
   addOneVisitCount: DataResult!
@@ -219,6 +247,7 @@ type Mutation {
   deleteAdmin(adminId: Int!): AdminResult!
   deleteArticle(article_id: Int!): ArticleResult!
   deleteComment(comment_id: Int!): CommentResult!
+  deleteFriendLink(friend_link_id: Int!): FriendLinkResult!
   resetLikeCount: DataResult!
   resetVisitCount: DataResult!
   updateAdmin(data: UpdateAdminInput!): AdminResult!
@@ -227,6 +256,8 @@ type Mutation {
   updateArticleStatus(article_id: Int!, article_status: Int!): ArticleResult!
   updateComment(input: UpdateCommentInput!): CommentResult!
   updateCommentStatus(comment_id: Int!, comment_status: Int!): CommentResult!
+  updateFriendLink(input: UpdateFriendLinkInput!): FriendLinkResult!
+  updateFriendLinkStatus(friend_link_id: Int!, friend_link_status: Int!): FriendLinkResult!
 }
 
 type Query {
@@ -234,13 +265,17 @@ type Query {
   findAllAdmin: AdminResult!
   findAllArticle: ArticleResult!
   findAllComment: CommentResult!
+  findAllFriendLink: FriendLinkResult!
   findArticleById(id: Int!): ArticleResult
   findArticleByPage(page: Int!, pageSize: Int!): ArticleResult!
   findCommentById(id: Int!): CommentResult
   findCommentByPage(page: Int!, pageSize: Int!): CommentResult!
+  findFriendLinkById(friend_link_id: Int!): FriendLinkResult
+  findFriendLinkByPage(page: Int!, pageSize: Int!): FriendLinkResult!
   getArticleTotalPages(pageSize: Int!): TotalPages!
   getCommentTotalPages(pageSize: Int!): TotalPagesOutput!
   getData: AllDataResult!
+  getFriendLinkTotalPages(pageSize: Int!): TotalPages!
   getLikeCount: DataResult!
   getVisitCount: DataResult!
 }
@@ -285,17 +320,14 @@ input UpdateArticleInput {
   """文章ID"""
   articleId: Int!
 
+  """COS 文件 key"""
+  article_bucket_key: String
+
   """COS 存储桶名称"""
   article_bucket_name: String
 
   """COS 存储桶区域"""
   article_bucket_region: String
-
-  """COS 文件 key"""
-  article_key: String
-
-  """文件名"""
-  article_name: String
 
   """文章状态"""
   article_status: ArticleStatus
@@ -322,4 +354,21 @@ input UpdateCommentInput {
 
   """评论用户名"""
   commentUserName: String
+}
+
+input UpdateFriendLinkInput {
+  """友链ID"""
+  linkId: Int!
+
+  """链接描述"""
+  link_description: String
+
+  """友链状态"""
+  link_status: Int
+
+  """友链标题"""
+  link_title: String
+
+  """URL地址"""
+  link_url: String
 }

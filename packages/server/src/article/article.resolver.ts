@@ -127,6 +127,13 @@ export class ArticleResolver {
    * @returns 返回更新成功的文章结果对象
    */
   async updateArticle(@Args('input') data: UpdateArticleInput) {
+    if (!data.articleId) {
+      return {
+        code: 400,
+        message: 'Missing required parameter (articleId)',
+        data: null,
+      };
+    }
     if (
       data.article_status &&
       (typeof data.article_status !== 'number' ||
@@ -159,17 +166,17 @@ export class ArticleResolver {
   @UseGuards(JwtAuthGuard)
   /**
    * 更新文章状态
-   * @param article_id 文章ID
-   * @param article_status 文章状态
+   * @param articleId 文章ID
+   * @param articleStatus 文章状态
    * @returns 返回更新成功的文章状态结果对象
    */
   async updateArticleStatus(
-    @Args('article_id', { type: () => Int }) article_id: number,
-    @Args('article_status', { type: () => Int }) article_status: number,
+    @Args('article_id', { type: () => Int }) articleId: number,
+    @Args('article_status', { type: () => Int }) articleStatus: number,
   ) {
     if (
-      typeof article_status !== 'number' ||
-      !Object.values(ArticleStatus).includes(article_status)
+      typeof articleStatus !== 'number' ||
+      !Object.values(ArticleStatus).includes(articleStatus)
     ) {
       return {
         code: 400,
@@ -178,21 +185,21 @@ export class ArticleResolver {
       };
     }
     const result = await this.articleService.updateStatus(
-      article_id,
-      article_status,
+      articleId,
+      articleStatus,
     );
 
     if (result) {
       return {
         code: 200,
-        message: `Article status updated successfully with ID ${article_id}`,
+        message: `Article status updated successfully with ID ${articleId}`,
         data: [result],
       };
     }
 
     return {
       code: 204,
-      message: `Failed to update article status with ID ${article_id}`,
+      message: `Failed to update article status with ID ${articleId}`,
       data: null,
     };
   }
@@ -201,38 +208,38 @@ export class ArticleResolver {
   @UseGuards(JwtAuthGuard)
   /**
    * 删除文章
-   * @param article_id 文章ID
+   * @param articleId 文章ID
    * @returns 返回删除成功的结果对象
    */
   async deleteArticle(
-    @Args('article_id', { type: () => Int }) article_id: number,
+    @Args('article_id', { type: () => Int }) articleId: number,
   ) {
-    const article = await this.articleService.findById(article_id);
+    const article = await this.articleService.findById(articleId);
     if (!article) {
       return {
         code: 204,
-        message: `No article found with ID ${article_id}`,
+        message: `No article found with ID ${articleId}`,
         data: null,
       };
     }
     await this.tencentCosService.delObject({
       Region: article?.article_bucket_region,
       Bucket: article?.article_bucket_name,
-      Key: article?.article_key,
+      Key: article?.article_bucket_key,
     });
-    const result = await this.articleService.remove(article_id);
+    const result = await this.articleService.remove(articleId);
 
     if (result === true) {
       return {
         code: 200,
-        message: `Article deleted successfully with ID ${article_id}`,
+        message: `Article deleted successfully with ID ${articleId}`,
         data: null,
       };
     }
 
     return {
       code: 204,
-      message: `Failed to delete article with ID ${article_id}`,
+      message: `Failed to delete article with ID ${articleId}`,
       data: null,
     };
   }

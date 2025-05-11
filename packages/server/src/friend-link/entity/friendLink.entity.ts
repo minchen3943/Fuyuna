@@ -26,12 +26,88 @@ registerEnumType(FriendLinkStatus, {
   description: '友情链接状态枚举',
 });
 
+export class PutFriendLinkLogoRequiredInput {
+  /**
+   * COS 存储桶名称
+   */
+  @Field(() => String, { nullable: false, description: 'COS 存储桶名称' })
+  @Column({
+    length: 50,
+    nullable: false,
+    name: 'link_image_bucket_name',
+    comment: 'COS 存储桶名称',
+  })
+  link_image_bucket_name!: string;
+
+  /**
+   * COS 存储桶所在区域
+   */
+  @Field(() => String, { nullable: false, description: 'COS 存储桶所在区域' })
+  @Column({
+    length: 20,
+    nullable: false,
+    name: 'link_image_bucket_region',
+    comment: 'COS 存储桶所在区域',
+  })
+  link_image_bucket_region!: string;
+
+  /**
+   * COS 文件 key
+   */
+  @Field(() => String, { nullable: false, description: 'COS 文件 key' })
+  @Column({
+    length: 500,
+    nullable: false,
+    name: 'link_image_bucket_key',
+    comment: 'COS 文件 key',
+  })
+  link_image_bucket_key!: string;
+}
+
+export class PutFriendLinkLogo {
+  /**
+   * COS 存储桶名称
+   */
+  @Field(() => String, { nullable: true, description: 'COS 存储桶名称' })
+  @Column({
+    length: 50,
+    nullable: true,
+    name: 'link_image_bucket_name',
+    comment: 'COS 存储桶名称',
+  })
+  link_image_bucket_name?: string;
+
+  /**
+   * COS 存储桶所在区域
+   */
+  @Field(() => String, { nullable: true, description: 'COS 存储桶所在区域' })
+  @Column({
+    length: 20,
+    nullable: true,
+    name: 'link_image_bucket_region',
+    comment: 'COS 存储桶所在区域',
+  })
+  link_image_bucket_region?: string;
+
+  /**
+   * COS 文件 key
+   */
+  @Field(() => String, { nullable: true, description: 'COS 文件 key' })
+  @Column({
+    length: 500,
+    nullable: true,
+    name: 'link_image_bucket_key',
+    comment: 'COS 文件 key',
+  })
+  link_image_bucket_key?: string;
+}
+
 /**
  * 友情链接实体类，对应数据库表 fyn_friend_link
  */
 @ObjectType()
 @Entity('fyn_friend_link')
-export class FriendLink {
+export class FriendLink extends PutFriendLinkLogoRequiredInput {
   /**
    * 链接ID
    */
@@ -64,19 +140,6 @@ export class FriendLink {
     comment: 'URL地址',
   })
   link_url!: string;
-
-  /**
-   * 图片路径
-   */
-  @Field(() => String, { nullable: true, description: '图片路径' })
-  @Column({
-    type: 'varchar',
-    length: 255,
-    name: 'link_image_path',
-    nullable: true,
-    comment: '图片路径',
-  })
-  link_image_path?: string;
 
   /**
    * 链接描述（100字符内）

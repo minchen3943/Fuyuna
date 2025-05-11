@@ -57,8 +57,7 @@ CREATE TABLE fyn_article
     article_title         TEXT         NOT NULL,
     article_bucket_name   VARCHAR(50)  NOT NULL,
     article_bucket_region VARCHAR(20)  NOT NULL,
-    article_key           VARCHAR(500) NOT NULL,
-    article_name          VARCHAR(100) NOT NULL,
+    article_bucket_key           VARCHAR(500) NOT NULL,
     created_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     article_view_count    INTEGER   DEFAULT 0
@@ -72,8 +71,7 @@ COMMENT ON COLUMN fyn_article.article_id IS '文章ID';
 COMMENT ON COLUMN fyn_article.article_title IS '文章标题（5-200字符）';
 COMMENT ON COLUMN fyn_article.article_bucket_name IS '云存储桶名称';
 COMMENT ON COLUMN fyn_article.article_bucket_region IS '云存储区域代码';
-COMMENT ON COLUMN fyn_article.article_key IS '云存储文件key';
-COMMENT ON COLUMN fyn_article.article_name IS '前端显示名称';
+COMMENT ON COLUMN fyn_article.article_bucket_key IS '云存储文件key';
 COMMENT ON COLUMN fyn_article.created_at IS '创建时间';
 COMMENT ON COLUMN fyn_article.updated_at IS '最后修改时间';
 COMMENT ON COLUMN fyn_article.article_view_count IS '文章浏览量（非负整数）';
@@ -109,20 +107,24 @@ COMMENT ON COLUMN fyn_comment.comment_status IS '状态：0-隐藏 1-可见 2-�
 -- ------------------------------
 CREATE TABLE fyn_friend_link
 (
-    link_id          SERIAL PRIMARY KEY,
-    link_title       VARCHAR(100) NOT NULL,
-    link_url         VARCHAR(255) NOT NULL,
-    link_image_path  VARCHAR(255),
-    link_description TEXT CHECK (length(link_description) <= 100),
-    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    link_status      SMALLINT  DEFAULT 1 CHECK ( link_status BETWEEN 0 AND 2)
+    link_id                  SERIAL PRIMARY KEY,
+    link_title               VARCHAR(100) NOT NULL,
+    link_url                 VARCHAR(255) NOT NULL,
+    link_image_bucket_name   VARCHAR(50)  NOT NULL,
+    link_image_bucket_region VARCHAR(20)  NOT NULL,
+    link_image_bucket_key    VARCHAR(500) NOT NULL,
+    link_description         TEXT CHECK (length(link_description) <= 100),
+    created_at               TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at               TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    link_status              SMALLINT  DEFAULT 1 CHECK ( link_status BETWEEN 0 AND 2)
 );
 COMMENT ON TABLE fyn_friend_link IS '友情链接管理表';
 COMMENT ON COLUMN fyn_friend_link.link_id IS '链接ID';
 COMMENT ON COLUMN fyn_friend_link.link_title IS '链接标题';
 COMMENT ON COLUMN fyn_friend_link.link_url IS 'URL地址';
-COMMENT ON COLUMN fyn_friend_link.link_image_path IS 'LOGO路径';
+COMMENT ON COLUMN fyn_friend_link.link_image_bucket_name IS '云存储桶名称';
+COMMENT ON COLUMN fyn_friend_link.link_image_bucket_region IS '云存储区域代码';
+COMMENT ON COLUMN fyn_friend_link.link_image_bucket_key IS '云存储文件key';
 COMMENT ON COLUMN fyn_friend_link.link_description IS '链接描述（100字符内）';
 COMMENT ON COLUMN fyn_friend_link.created_at IS '创建时间';
 COMMENT ON COLUMN fyn_friend_link.updated_at IS '最后修改时间';

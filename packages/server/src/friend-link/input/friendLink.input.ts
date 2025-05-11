@@ -1,11 +1,46 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
+import {
+  FriendLinkStatus,
+  PutFriendLinkLogo,
+} from '../entity/friendLink.entity';
+
+/**
+ * 创建友链输入类型
+ * @remarks 创建友链接口的数据传输对象
+ */
+@InputType()
+export class CreateFriendLinkInput extends PutFriendLinkLogo {
+  /**
+   * 友链标题
+   */
+  @Field(() => String, { nullable: false, description: '友链标题' })
+  link_title!: string;
+
+  /**
+   * URL地址
+   */
+  @Field(() => String, { nullable: false, description: 'URL地址' })
+  link_url!: string;
+
+  /**
+   * 链接描述
+   */
+  @Field(() => String, { nullable: true, description: '链接描述' })
+  link_description?: string;
+
+  /**
+   * 友链状态
+   */
+  @Field(() => Int, { nullable: false, description: '友链状态' })
+  link_status!: FriendLinkStatus;
+}
 
 /**
  * 更新友链输入类型
- * @remarks 用于 GraphQL 更新友链接口的数据传输对象
+ * @remarks 更新友链接口的数据传输对象
  */
 @InputType()
-export class UpdateFriendLinkInput {
+export class UpdateFriendLinkInput extends PutFriendLinkLogo {
   /**
    * 友链ID
    */
@@ -13,32 +48,26 @@ export class UpdateFriendLinkInput {
   linkId!: number;
 
   /**
-   * 友链名称
+   * 友链标题
    */
-  @Field(() => String, { nullable: true, description: '友链名称' })
-  link_name?: string;
+  @Field(() => String, { nullable: true, description: '友链标题' })
+  link_title?: string;
 
   /**
-   * 友链地址
+   * URL地址
    */
-  @Field(() => String, { nullable: true, description: '友链地址' })
+  @Field(() => String, { nullable: true, description: 'URL地址' })
   link_url?: string;
 
   /**
-   * 友链Logo
+   * 链接描述
    */
-  @Field(() => String, { nullable: true, description: '友链Logo' })
-  link_logo?: string;
-
-  /**
-   * 友链描述
-   */
-  @Field(() => String, { nullable: true, description: '友链描述' })
-  link_desc?: string;
+  @Field(() => String, { nullable: true, description: '链接描述' })
+  link_description?: string;
 
   /**
    * 友链状态
    */
   @Field(() => Int, { nullable: true, description: '友链状态' })
-  link_status?: number;
+  link_status?: FriendLinkStatus;
 }

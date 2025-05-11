@@ -118,9 +118,14 @@ export class DataService {
     }
     data.visitCount = 0;
     await this.dataRepo.save(data);
+    const result = await this.getData();
+    if (!result) {
+      this.logger.warn('No data found');
+      return null;
+    }
     this.logger.log('Visit count reset successfully');
-    this.logger.debug(`Visit count: ${data.visitCount}`);
-    return data.visitCount;
+    this.logger.debug(`Visit count: ${result.visitCount}`);
+    return result.visitCount;
   }
 
   /**
@@ -135,8 +140,13 @@ export class DataService {
     }
     data.likeCount = 0;
     await this.dataRepo.save(data);
+    const result = await this.getData();
+    if (!result) {
+      this.logger.warn('No data found');
+      return null;
+    }
     this.logger.log('Like count reset successfully');
-    this.logger.debug(`Like count: ${data.likeCount}`);
-    return data.likeCount;
+    this.logger.debug(`Like count: ${result.likeCount}`);
+    return result.likeCount;
   }
 }

@@ -29,13 +29,7 @@ export class CreateArticleInput {
    * COS 文件 key
    */
   @Field(() => String, { description: 'COS 文件 key' })
-  article_key!: string;
-
-  /**
-   * 文件名
-   */
-  @Field(() => String, { description: '文件名' })
-  article_name!: string;
+  article_bucket_key!: string;
 }
 
 /**
@@ -84,16 +78,7 @@ export class UpdateArticleInput {
     nullable: true,
     description: 'COS 文件 key',
   })
-  article_key?: string;
-
-  /**
-   * 文件名
-   */
-  @Field(() => String, {
-    nullable: true,
-    description: '文件名',
-  })
-  article_name?: string;
+  article_bucket_key?: string;
 
   /**
    * 文章状态

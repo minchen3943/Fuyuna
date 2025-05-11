@@ -8,9 +8,9 @@ import {
 import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
 
 export enum CommentStatus {
-  Pending = 0,
-  Approved = 1,
-  Abnormal = 2,
+  Hidden = 0,
+  Public = 1,
+  Reviewing = 2,
 }
 
 registerEnumType(CommentStatus, {
@@ -110,7 +110,7 @@ export class Comment {
   @Column({
     type: 'smallint',
     nullable: false,
-    default: CommentStatus.Pending,
+    default: CommentStatus.Hidden,
     name: 'comment_status',
   })
   commentStatus!: CommentStatus;

@@ -6,7 +6,7 @@ import { FriendLink } from './friendLink.entity';
  * @remarks 用于封装友链相关的 GraphQL 查询返回结构
  */
 @ObjectType()
-export class ArticleResult {
+export class FriendLinkResult {
   /**
    * 状态码
    */

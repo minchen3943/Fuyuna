@@ -10,7 +10,10 @@ import { Repository } from 'typeorm';
 import Redis from 'ioredis';
 import { REDIS_CLIENT } from 'src/constants';
 import { FriendLink } from './entity/friendLink.entity';
-import { UpdateFriendLinkInput } from './input/friendLink.input';
+import {
+  UpdateFriendLinkInput,
+  CreateFriendLinkInput,
+} from './input/friendLink.input';
 
 /**
  * @class FriendLinkService
@@ -145,6 +148,28 @@ export class FriendLinkService {
   }
 
   /**
+   * 创建友链
+   * @param friendLink 友链对象
+   * @returns 创建的友链对象或 null
+   */
+  public async createFriendLink(
+    friendLink: CreateFriendLinkInput,
+  ): Promise<FriendLink | null> {
+    const result = await this.friendLinkRepo.save(friendLink);
+    if (result) {
+      await this.redis.del('friendLink:all');
+      await this.redis.del('friendLink:page:*');
+      await this.redis.del('friendLink:totalPage:*');
+      await this.redis.del(`friendLink:id:${result.link_id}`);
+      this.logger.log(`Created friend link id=${result.link_id}`);
+      this.logger.debug(`Created FriendLink: ${JSON.stringify(result)}`);
+      return result;
+    }
+    this.logger.warn('Failed to create friend link');
+    return null;
+  }
+
+  /**
    * 更新友链信息
    * @param linkId 友链 id
    * @param updateData 更新数据
@@ -213,8 +238,10 @@ export class FriendLinkService {
   public async deleteFriendLink(id: number): Promise<boolean> {
     const result = await this.friendLinkRepo.delete(id);
     if (result.affected && result.affected > 0) {
-      await this.redis.del(`friendLink:id:${id}`);
       await this.redis.del('friendLink:all');
+      await this.redis.del('friendLink:page:*');
+      await this.redis.del(`friendLink:totalPage:*`);
+      await this.redis.del(`friendLink:id:${id}`);
       this.logger.log(`Deleted friend link id=${id}`);
       return true;
     }

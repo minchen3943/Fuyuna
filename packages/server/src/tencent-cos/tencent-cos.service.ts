@@ -10,6 +10,7 @@ import { v4 as uuidV4 } from 'uuid';
 import COS = require('cos-nodejs-sdk-v5');
 import { CreateArticleInput } from 'src/article/input/article.input';
 import { DeleteObjectParams } from 'cos-nodejs-sdk-v5';
+import { PutFriendLinkLogo } from 'src/friend-link/entity/friendLink.entity';
 
 /**
  * 腾讯云 COS 服务
@@ -59,6 +60,7 @@ export class TencentCosService {
       policy: this.config.policy,
     });
     this.logger.log('TemporarySecretKey get succeed');
+    this.logger.debug(`TemporarySecretKey: ${JSON.stringify(result)}`);
     return result;
   }
 
@@ -67,7 +69,9 @@ export class TencentCosService {
    * @param stream 文件流
    * @returns 上传后的文章输入对象
    */
-  public async putObject(stream: Stream): Promise<CreateArticleInput> {
+  public async putArticle(stream: Stream): Promise<CreateArticleInput> {
+    this.initCOS().catch((err) => this.logger.error('初始化COS失败', err));
+
     const name = `${uuidV4()}.md`;
     const key = `article/${name}`;
     return new Promise((resolve, reject) => {
@@ -90,10 +94,49 @@ export class TencentCosService {
             this.logger.debug(`${JSON.stringify(data)}`);
             resolve({
               article_title: '',
-              article_name: name,
               article_bucket_name: this.bucket,
               article_bucket_region: this.config.region as string,
-              article_key: key,
+              article_bucket_key: key,
+            });
+          } else {
+            return null;
+          }
+        },
+      );
+    });
+  }
+
+  /**
+   * 上传对象到 COS
+   * @param stream 文件流
+   * @returns 上传后的文章输入对象
+   */
+  public async putFriendLinkLogo(stream: Stream): Promise<PutFriendLinkLogo> {
+    this.initCOS().catch((err) => this.logger.error('初始化COS失败', err));
+    const name = `${uuidV4()}.png`;
+    const key = `article/${name}`;
+    return new Promise((resolve, reject) => {
+      this.cos.putObject(
+        {
+          Bucket: this.bucket,
+          Region: this.config.region!,
+          Key: key,
+          Body: stream,
+        },
+        (err, data) => {
+          if (err) {
+            reject(
+              err instanceof Error
+                ? err
+                : new Error(err.message || JSON.stringify(err)),
+            );
+          } else if (data.statusCode === 200) {
+            this.logger.log(`Upload file succeed`);
+            this.logger.debug(`${JSON.stringify(data)}`);
+            resolve({
+              link_image_bucket_name: this.bucket,
+              link_image_bucket_region: this.config.region as string,
+              link_image_bucket_key: key,
             });
           } else {
             return null;
@@ -109,6 +152,7 @@ export class TencentCosService {
    * @returns Promise<any>
    */
   public async delObject(parm: DeleteObjectParams): Promise<any> {
+    this.initCOS().catch((err) => this.logger.error('初始化COS失败', err));
     return new Promise((resolve, reject) => {
       this.cos.deleteObject(parm, (err) => {
         if (err) {

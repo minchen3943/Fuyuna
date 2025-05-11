@@ -20,7 +20,7 @@ interface ValidUploadFile {
 /**
  * 判断文件是否为有效上传文件
  * @param file 待校验对象
- * @returns 是否为 ValidUploadFile 类型
+ * @returns 是否有效的文件
  */
 function isValidUploadFile(file: unknown): file is ValidUploadFile {
   return (
@@ -61,6 +61,10 @@ export class ArticleController {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: { articleTitle: string },
   ) {
+    const isMarkdown =
+      file &&
+      (file.mimetype === 'text/markdown' ||
+        file.originalname.toLowerCase().endsWith('.md'));
     if (!isValidUploadFile(file)) {
       return {
         code: 400,
@@ -68,9 +72,23 @@ export class ArticleController {
         data: null,
       };
     }
+    if (!isMarkdown) {
+      return {
+        code: 400,
+        message: '只允许上传 Markdown 文件(.md)',
+        data: null,
+      };
+    }
+    if (!body.articleTitle) {
+      return {
+        code: 400,
+        message: '缺少必要参数(articleTitle)',
+        data: null,
+      };
+    }
     const stream = new PassThrough();
     stream.end(file.buffer);
-    const data = await this.tencentCosService.putObject(stream);
+    const data = await this.tencentCosService.putArticle(stream);
     if (!data) {
       return {
         code: 204,
