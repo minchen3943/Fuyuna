@@ -44,7 +44,10 @@ export class CommentService {
       this.logger.debug(`(cache) Comments: ${JSON.stringify(comments)}`);
       return comments;
     }
-    const comments = await this.commentRepo.find();
+    const comments = await this.commentRepo.find({
+      where: { commentStatus: 1 },
+      order: { created_at: 'DESC' },
+    });
     if (comments.length > 0) {
       this.logger.log(`Found ${comments.length} comments`);
       this.logger.debug(`Comments: ${JSON.stringify(comments)}`);
@@ -109,6 +112,7 @@ export class CommentService {
     const comments = await this.commentRepo.find({
       skip: (page - 1) * pageSize,
       take: pageSize,
+      where: { commentStatus: 1 },
       order: { created_at: 'DESC' },
     });
     if (comments.length > 0) {

@@ -205,11 +205,19 @@ export class FriendLinkResolver {
         data: null,
       };
     }
-    await this.tencentCosService.delObject({
-      Region: friendLink?.link_image_bucket_region,
-      Bucket: friendLink?.link_image_bucket_name,
-      Key: friendLink?.link_image_bucket_key,
-    });
+
+    if (
+      friendLink.link_image_bucket_key &&
+      friendLink.link_image_bucket_region &&
+      friendLink.link_image_bucket_name
+    ) {
+      await this.tencentCosService.delObject({
+        Region: friendLink.link_image_bucket_region,
+        Bucket: friendLink.link_image_bucket_name,
+        Key: friendLink.link_image_bucket_key,
+      });
+    }
+
     const result = await this.friendLinkService.deleteFriendLink(friendLinkId);
 
     if (result === true) {

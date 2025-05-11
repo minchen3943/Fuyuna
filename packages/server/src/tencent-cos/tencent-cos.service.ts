@@ -114,7 +114,7 @@ export class TencentCosService {
   public async putFriendLinkLogo(stream: Stream): Promise<PutFriendLinkLogo> {
     this.initCOS().catch((err) => this.logger.error('初始化COS失败', err));
     const name = `${uuidV4()}.png`;
-    const key = `article/${name}`;
+    const key = `friend-link-logo/${name}`;
     return new Promise((resolve, reject) => {
       this.cos.putObject(
         {

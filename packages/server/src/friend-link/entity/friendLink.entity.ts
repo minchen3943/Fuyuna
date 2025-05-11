@@ -107,7 +107,7 @@ export class PutFriendLinkLogo {
  */
 @ObjectType()
 @Entity('fyn_friend_link')
-export class FriendLink extends PutFriendLinkLogoRequiredInput {
+export class FriendLink extends PutFriendLinkLogo {
   /**
    * 链接ID
    */
@@ -188,4 +188,13 @@ export class FriendLink extends PutFriendLinkLogoRequiredInput {
     comment: '友链状态',
   })
   link_status!: FriendLinkStatus;
+
+  @Field(() => String, { nullable: true, description: 'COS 存储桶名称' })
+  declare link_image_bucket_name?: string;
+
+  @Field(() => String, { nullable: true, description: 'COS 存储桶所在区域' })
+  declare link_image_bucket_region?: string;
+
+  @Field(() => String, { nullable: true, description: 'COS 文件 key' })
+  declare link_image_bucket_key?: string;
 }

@@ -45,11 +45,18 @@ export class FriendLinkService {
     const cached = await this.redis.get(key);
     if (cached) {
       const links = JSON.parse(cached) as FriendLink[];
+      links.forEach((link) => {
+        if (link.created_at) link.created_at = new Date(link.created_at);
+        if (link.updated_at) link.updated_at = new Date(link.updated_at);
+      });
       this.logger.log(`(cache) Found ${links.length} friend links`);
       this.logger.debug(`(cache) FriendLinks: ${JSON.stringify(links)}`);
       return links;
     }
-    const links = await this.friendLinkRepo.find();
+    const links = await this.friendLinkRepo.find({
+      where: { link_status: 1 },
+      order: { created_at: 'DESC' },
+    });
     if (links.length > 0) {
       await this.redis.set(key, JSON.stringify(links), 'EX', 3600);
       this.logger.log(`Found ${links.length} friend links`);
@@ -70,6 +77,8 @@ export class FriendLinkService {
     const cached = await this.redis.get(key);
     if (cached) {
       const link = JSON.parse(cached) as FriendLink;
+      link.created_at = new Date(link.created_at);
+      link.updated_at = new Date(link.updated_at);
       this.logger.log(`(cache) Found friend link id=${linkId}`);
       this.logger.debug(`(cache) FriendLink: ${JSON.stringify(link)}`);
       return link;
@@ -101,6 +110,7 @@ export class FriendLinkService {
       const friendLinks = JSON.parse(cached) as FriendLink[];
       friendLinks.forEach((friendLink) => {
         friendLink.created_at = new Date(friendLink.created_at);
+        friendLink.updated_at = new Date(friendLink.updated_at);
       });
       this.logger.log(
         `(cache) Found ${friendLinks.length} friendLinks on page ${page}`,
@@ -179,11 +189,28 @@ export class FriendLinkService {
     linkId: number,
     updateData: UpdateFriendLinkInput,
   ): Promise<FriendLink | null> {
-    if (!(await this.findById(linkId))) {
+    const friendLink = await this.findById(linkId);
+    if (!friendLink) {
       this.logger.warn(`No friendLink found for update, id=${linkId}`);
       return null;
     }
-    const result = await this.friendLinkRepo.save({ ...updateData });
+    // 只更新有值的字段
+    const fields: (keyof FriendLink & keyof UpdateFriendLinkInput)[] = [
+      'link_status',
+      'link_title',
+      'link_url',
+      'link_description',
+      'link_image_bucket_name',
+      'link_image_bucket_region',
+      'link_image_bucket_key',
+    ];
+    fields.forEach((key) => {
+      if (updateData[key] !== undefined && updateData[key] !== null) {
+        (friendLink as Record<typeof key, any>)[key] = updateData[key];
+      }
+    });
+
+    const result = await this.friendLinkRepo.save(friendLink);
     if (result) {
       await this.redis.del('friendLink:all');
       await this.redis.del(`friendLink:id:${linkId}`);
@@ -207,24 +234,26 @@ export class FriendLinkService {
     linkId: number,
     status: number,
   ): Promise<FriendLink | null> {
-    const link = await this.findById(linkId);
-    if (!link) {
+    if (!(await this.findById(linkId))) {
       this.logger.warn(`No friend link found for status update, id=${linkId}`);
       return null;
     }
-    link.link_status = status;
-    const result = await this.friendLinkRepo.save(link);
-    if (!result) {
+    const result = await this.friendLinkRepo.save({
+      link_id: linkId,
+      link_status: status,
+    });
+    if (result) {
       await this.redis.del(`friendLink:id:${linkId}`);
       await this.redis.del('friendLink:all');
-      const final = await this.findById(linkId);
+      await this.redis.del('friendLink:page:*');
+      await this.redis.del('friendLink:totalPage:*');
       this.logger.log(
-        `Updated friend link status id=${linkId} status=${status}`,
+        `Friend link status updated successfully for ID ${linkId}`,
       );
-      this.logger.debug(`Updated FriendLink: ${JSON.stringify(final)}`);
-      return final;
+      this.logger.debug(`Updated friend link status: ${status}`);
+      return this.findById(linkId);
     } else {
-      this.logger.warn(`Failed to update friend link status id=${linkId}`);
+      this.logger.warn(`Failed to update friend link status for ID ${linkId}`);
       return null;
     }
   }

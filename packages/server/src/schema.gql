@@ -214,6 +214,15 @@ type FriendLink {
   """链接ID"""
   link_id: ID!
 
+  """COS 文件 key"""
+  link_image_bucket_key: String
+
+  """COS 存储桶名称"""
+  link_image_bucket_name: String
+
+  """COS 存储桶所在区域"""
+  link_image_bucket_region: String
+
   """友链状态"""
   link_status: Int!
 

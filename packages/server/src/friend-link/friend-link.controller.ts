@@ -96,7 +96,7 @@ export class FriendLinkController {
     if (!data) {
       return {
         code: 204,
-        message: 'Filed to upload file',
+        message: '友链创建失败',
         data: data,
       };
     }
@@ -114,7 +114,7 @@ export class FriendLinkController {
     const result = await this.friendLinkService.createFriendLink(friendLink);
     return {
       code: 200,
-      message: '文件上传成功',
+      message: '友链创建成功',
       data: [result],
     };
   }

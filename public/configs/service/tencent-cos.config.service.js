@@ -35,6 +35,7 @@ class TencentCOSConfig {
             effect: 'allow',
             resource: [
               'qcs::cos:ap-guangzhou:uid/1354220332:mochenwu-1354220332/article/*',
+              'qcs::cos:ap-guangzhou:uid/1354220332:mochenwu-1354220332/friend-link-logo/*',
             ],
           },
         ],
