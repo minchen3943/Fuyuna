@@ -13,13 +13,13 @@ type Admin {
   adminPasswordHash: String!
 
   """创建时间"""
-  created_at: DateTime
+  createdAt: DateTime
 
   """是否激活"""
   isActive: Boolean!
 
   """最后更新时间"""
-  updated_at: DateTime
+  updatedAt: DateTime
 }
 
 type AdminResult {
@@ -46,31 +46,31 @@ type AllDataResult {
 
 type Article {
   """COS 文件 key"""
-  article_bucket_key: String!
+  articleBucketKey: String!
 
   """COS 存储桶名称"""
-  article_bucket_name: String!
+  articleBucketName: String!
 
   """COS 存储桶所在区域"""
-  article_bucket_region: String!
+  articleBucketRegion: String!
 
   """文章ID"""
-  article_id: ID!
+  articleId: ID!
 
   """文章状态"""
-  article_status: Int!
+  articleStatus: Int!
 
   """文章标题"""
-  article_title: String!
+  articleTitle: String!
 
   """文章浏览量"""
-  article_view_count: Int!
+  articleViewCount: Int!
 
   """创建时间"""
-  created_at: DateTime
+  createdAt: DateTime
 
   """最后更新时间"""
-  updated_at: DateTime
+  updatedAt: DateTime
 }
 
 type ArticleResult {
@@ -111,10 +111,10 @@ type Comment {
   commentUserName: String!
 
   """创建时间"""
-  created_at: DateTime
+  createdAt: DateTime
 
   """最后更新时间"""
-  updated_at: DateTime
+  updatedAt: DateTime
 }
 
 type CommentResult {
@@ -145,16 +145,16 @@ input CreateAdminInput {
 
 input CreateArticleInput {
   """COS 文件 key"""
-  article_bucket_key: String!
+  articleBucketKey: String!
 
   """COS 存储桶名称"""
-  article_bucket_name: String!
+  articleBucketName: String!
 
   """COS 存储桶区域"""
-  article_bucket_region: String!
+  articleBucketRegion: String!
 
   """文章标题"""
-  article_title: String!
+  articleTitle: String!
 }
 
 input CreateCommentInput {
@@ -206,34 +206,34 @@ scalar DateTime
 
 type FriendLink {
   """创建时间"""
-  created_at: DateTime!
+  createdAt: DateTime!
 
   """链接描述"""
-  link_description: String
+  linkDescription: String
 
   """链接ID"""
-  link_id: ID!
+  linkId: ID!
 
   """COS 文件 key"""
-  link_image_bucket_key: String
+  linkImageBucketKey: String
 
   """COS 存储桶名称"""
-  link_image_bucket_name: String
+  linkImageBucketName: String
 
   """COS 存储桶所在区域"""
-  link_image_bucket_region: String
+  linkImageBucketRegion: String
 
   """友链状态"""
-  link_status: Int!
+  linkStatus: Int!
 
   """链接标题"""
-  link_title: String!
+  linkTitle: String!
 
   """URL地址"""
-  link_url: String!
+  linkUrl: String!
 
   """最后修改时间"""
-  updated_at: DateTime!
+  updatedAt: DateTime!
 }
 
 type FriendLinkResult {
@@ -270,20 +270,20 @@ type Mutation {
 }
 
 type Query {
-  findAdminById(id: Int!): AdminResult
-  findAllAdmin: AdminResult!
-  findAllArticle: ArticleResult!
-  findAllComment: CommentResult!
-  findAllFriendLink: FriendLinkResult!
-  findArticleById(id: Int!): ArticleResult
-  findArticleByPage(page: Int!, pageSize: Int!): ArticleResult!
-  findCommentById(id: Int!): CommentResult
-  findCommentByPage(page: Int!, pageSize: Int!): CommentResult!
-  findFriendLinkById(friend_link_id: Int!): FriendLinkResult
-  findFriendLinkByPage(page: Int!, pageSize: Int!): FriendLinkResult!
+  getAdminById(id: Int!): AdminResult
+  getAllAdmin: AdminResult!
+  getAllArticle: ArticleResult!
+  getAllComment: CommentResult!
+  getAllFriendLink: FriendLinkResult!
+  getArticleById(id: Int!): ArticleResult
+  getArticleByPage(page: Int!, pageSize: Int!): ArticleResult!
   getArticleTotalPages(pageSize: Int!): TotalPages!
+  getCommentById(id: Int!): CommentResult
+  getCommentByPage(page: Int!, pageSize: Int!): CommentResult!
   getCommentTotalPages(pageSize: Int!): TotalPagesOutput!
   getData: AllDataResult!
+  getFriendLinkById(friend_link_id: Int!): FriendLinkResult
+  getFriendLinkByPage(page: Int!, pageSize: Int!): FriendLinkResult!
   getFriendLinkTotalPages(pageSize: Int!): TotalPages!
   getLikeCount: DataResult!
   getVisitCount: DataResult!
@@ -326,23 +326,23 @@ input UpdateAdminInput {
 }
 
 input UpdateArticleInput {
+  """COS 文件 key"""
+  articleBucketKey: String
+
+  """COS 存储桶名称"""
+  articleBucketName: String
+
+  """COS 存储桶区域"""
+  articleBucketRegion: String
+
   """文章ID"""
   articleId: Int!
 
-  """COS 文件 key"""
-  article_bucket_key: String
-
-  """COS 存储桶名称"""
-  article_bucket_name: String
-
-  """COS 存储桶区域"""
-  article_bucket_region: String
-
   """文章状态"""
-  article_status: ArticleStatus
+  articleStatus: ArticleStatus
 
   """文章标题"""
-  article_title: String
+  articleTitle: String
 }
 
 input UpdateCommentInput {
@@ -366,18 +366,18 @@ input UpdateCommentInput {
 }
 
 input UpdateFriendLinkInput {
+  """链接描述"""
+  linkDescription: String
+
   """友链ID"""
   linkId: Int!
 
-  """链接描述"""
-  link_description: String
-
   """友链状态"""
-  link_status: Int
+  linkStatus: Int
 
   """友链标题"""
-  link_title: String
+  linkTitle: String
 
   """URL地址"""
-  link_url: String
+  linkUrl: String
 }

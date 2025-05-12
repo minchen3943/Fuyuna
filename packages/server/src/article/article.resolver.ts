@@ -20,7 +20,7 @@ export class ArticleResolver {
    * 查询所有文章
    * @returns 返回包含所有文章的结果对象
    */
-  async findAllArticle() {
+  async getAllArticle() {
     const result = await this.articleService.findAll();
     if (result && result.length > 0) {
       return {
@@ -39,7 +39,7 @@ export class ArticleResolver {
    * @param pageSize 每页数量
    * @returns 返回指定页码的文章结果对象
    */
-  async findArticleByPage(
+  async getArticleByPage(
     @Args('page', { type: () => Int }) page: number,
     @Args('pageSize', { type: () => Int }) pageSize: number,
   ) {
@@ -88,7 +88,7 @@ export class ArticleResolver {
    * @param id 文章ID
    * @returns 返回指定ID的文章结果对象
    */
-  async findArticleById(@Args('id', { type: () => Int }) id: number) {
+  async getArticleById(@Args('id', { type: () => Int }) id: number) {
     const result = await this.articleService.findById(id);
     if (result) {
       return {
@@ -112,7 +112,7 @@ export class ArticleResolver {
     if (result) {
       return {
         code: 200,
-        message: `Article created successfully with ID ${result.article_id}`,
+        message: `Article created successfully with ID ${result.articleId}`,
         data: [result],
       };
     }
@@ -135,9 +135,9 @@ export class ArticleResolver {
       };
     }
     if (
-      data.article_status &&
-      (typeof data.article_status !== 'number' ||
-        !Object.values(ArticleStatus).includes(data.article_status))
+      data.articleStatus &&
+      (typeof data.articleStatus !== 'number' ||
+        !Object.values(ArticleStatus).includes(data.articleStatus))
     ) {
       return {
         code: 400,
@@ -150,7 +150,7 @@ export class ArticleResolver {
     if (result) {
       return {
         code: 200,
-        message: `Article updated successfully with ID ${result.article_id}`,
+        message: `Article updated successfully with ID ${result.articleId}`,
         data: [result],
       };
     }
@@ -223,11 +223,11 @@ export class ArticleResolver {
       };
     }
     await this.tencentCosService.delObject({
-      Region: article?.article_bucket_region,
-      Bucket: article?.article_bucket_name,
-      Key: article?.article_bucket_key,
+      Region: article?.articleBucketRegion,
+      Bucket: article?.articleBucketName,
+      Key: article?.articleBucketKey,
     });
-    const result = await this.articleService.remove(articleId);
+    const result = await this.articleService.delete(articleId);
 
     if (result === true) {
       return {

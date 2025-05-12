@@ -37,8 +37,8 @@ export class CommentService {
     if (cached) {
       const comments = JSON.parse(cached) as Comment[];
       comments.forEach((comment) => {
-        comment.created_at = new Date(comment.created_at);
-        comment.updated_at = new Date(comment.updated_at);
+        comment.createdAt = new Date(comment.createdAt);
+        comment.updatedAt = new Date(comment.updatedAt);
       });
       this.logger.log(`(cache) Found ${comments.length} comments`);
       this.logger.debug(`(cache) Comments: ${JSON.stringify(comments)}`);
@@ -46,7 +46,7 @@ export class CommentService {
     }
     const comments = await this.commentRepo.find({
       where: { commentStatus: 1 },
-      order: { created_at: 'DESC' },
+      order: { createdAt: 'DESC' },
     });
     if (comments.length > 0) {
       this.logger.log(`Found ${comments.length} comments`);
@@ -69,8 +69,8 @@ export class CommentService {
     const cached = await this.redis.get(key);
     if (cached) {
       const comment = JSON.parse(cached) as Comment;
-      comment.created_at = new Date(comment.created_at);
-      comment.updated_at = new Date(comment.updated_at);
+      comment.createdAt = new Date(comment.createdAt);
+      comment.updatedAt = new Date(comment.updatedAt);
       this.logger.log(`(cache) Found comment with ID ${commentId}`);
       this.logger.debug(`(cache) Comment: ${JSON.stringify(comment)}`);
       return comment;
@@ -100,8 +100,8 @@ export class CommentService {
     if (cached) {
       const comments = JSON.parse(cached) as Comment[];
       comments.forEach((comment) => {
-        comment.created_at = new Date(comment.created_at);
-        comment.updated_at = new Date(comment.updated_at);
+        comment.createdAt = new Date(comment.createdAt);
+        comment.updatedAt = new Date(comment.updatedAt);
       });
       this.logger.log(
         `(cache) Found ${comments.length} comments on page ${page}`,
@@ -113,7 +113,7 @@ export class CommentService {
       skip: (page - 1) * pageSize,
       take: pageSize,
       where: { commentStatus: 1 },
-      order: { created_at: 'DESC' },
+      order: { createdAt: 'DESC' },
     });
     if (comments.length > 0) {
       await this.redis.set(key, JSON.stringify(comments), 'EX', 18000);
@@ -238,7 +238,7 @@ export class CommentService {
    * @param {number} commentId - 评论ID
    * @returns {Promise<boolean>} 是否删除成功
    */
-  async remove(commentId: number): Promise<boolean> {
+  async delete(commentId: number): Promise<boolean> {
     const result = await this.commentRepo.delete(commentId);
     if (result.affected === 1) {
       await this.redis.del(`comment:id:${commentId}`);

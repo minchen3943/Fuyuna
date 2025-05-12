@@ -14,25 +14,25 @@ export class CreateFriendLinkInput extends PutFriendLinkLogo {
    * 友链标题
    */
   @Field(() => String, { nullable: false, description: '友链标题' })
-  link_title!: string;
+  linkTitle!: string;
 
   /**
    * URL地址
    */
   @Field(() => String, { nullable: false, description: 'URL地址' })
-  link_url!: string;
+  linkUrl!: string;
 
   /**
    * 链接描述
    */
   @Field(() => String, { nullable: true, description: '链接描述' })
-  link_description?: string;
+  linkDescription?: string;
 
   /**
    * 友链状态
    */
   @Field(() => Int, { nullable: false, description: '友链状态' })
-  link_status!: FriendLinkStatus;
+  linkStatus!: FriendLinkStatus;
 }
 
 /**
@@ -51,23 +51,23 @@ export class UpdateFriendLinkInput extends PutFriendLinkLogo {
    * 友链标题
    */
   @Field(() => String, { nullable: true, description: '友链标题' })
-  link_title?: string;
+  linkTitle?: string;
 
   /**
    * URL地址
    */
   @Field(() => String, { nullable: true, description: 'URL地址' })
-  link_url?: string;
+  linkUrl?: string;
 
   /**
    * 链接描述
    */
   @Field(() => String, { nullable: true, description: '链接描述' })
-  link_description?: string;
+  linkDescription?: string;
 
   /**
    * 友链状态
    */
   @Field(() => Int, { nullable: true, description: '友链状态' })
-  link_status?: FriendLinkStatus;
+  linkStatus?: FriendLinkStatus;
 }

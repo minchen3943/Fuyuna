@@ -24,7 +24,7 @@ export class CommentResolver {
    * @returns 评论结果对象
    */
   @Query(() => CommentResult)
-  async findAllComment() {
+  async getAllComment() {
     const result = await this.commentService.findAll();
     if (result && result.length > 0) {
       return {
@@ -43,7 +43,7 @@ export class CommentResolver {
    * @returns 评论结果对象
    */
   @Query(() => CommentResult)
-  async findCommentByPage(
+  async getCommentByPage(
     @Args('page', { type: () => Int }) page: number,
     @Args('pageSize', { type: () => Int }) pageSize: number,
   ) {
@@ -95,7 +95,7 @@ export class CommentResolver {
    * @returns 评论结果对象
    */
   @Query(() => CommentResult, { nullable: true })
-  async findCommentById(@Args('id', { type: () => Int }) id: number) {
+  async getCommentById(@Args('id', { type: () => Int }) id: number) {
     const result = await this.commentService.findById(id);
     if (result) {
       return {
@@ -206,7 +206,7 @@ export class CommentResolver {
   async deleteComment(
     @Args('comment_id', { type: () => Int }) comment_id: number,
   ) {
-    const result = await this.commentService.remove(comment_id);
+    const result = await this.commentService.delete(comment_id);
     if (result === true) {
       return {
         code: 200,

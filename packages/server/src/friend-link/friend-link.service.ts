@@ -46,16 +46,16 @@ export class FriendLinkService {
     if (cached) {
       const links = JSON.parse(cached) as FriendLink[];
       links.forEach((link) => {
-        if (link.created_at) link.created_at = new Date(link.created_at);
-        if (link.updated_at) link.updated_at = new Date(link.updated_at);
+        if (link.createdAt) link.createdAt = new Date(link.createdAt);
+        if (link.updatedAt) link.updatedAt = new Date(link.updatedAt);
       });
       this.logger.log(`(cache) Found ${links.length} friend links`);
       this.logger.debug(`(cache) FriendLinks: ${JSON.stringify(links)}`);
       return links;
     }
     const links = await this.friendLinkRepo.find({
-      where: { link_status: 1 },
-      order: { created_at: 'DESC' },
+      where: { linkStatus: 1 },
+      order: { createdAt: 'DESC' },
     });
     if (links.length > 0) {
       await this.redis.set(key, JSON.stringify(links), 'EX', 3600);
@@ -77,13 +77,13 @@ export class FriendLinkService {
     const cached = await this.redis.get(key);
     if (cached) {
       const link = JSON.parse(cached) as FriendLink;
-      link.created_at = new Date(link.created_at);
-      link.updated_at = new Date(link.updated_at);
+      link.createdAt = new Date(link.createdAt);
+      link.updatedAt = new Date(link.updatedAt);
       this.logger.log(`(cache) Found friend link id=${linkId}`);
       this.logger.debug(`(cache) FriendLink: ${JSON.stringify(link)}`);
       return link;
     }
-    const link = await this.friendLinkRepo.findOneBy({ link_id: linkId });
+    const link = await this.friendLinkRepo.findOneBy({ linkId: linkId });
     if (link) {
       await this.redis.set(key, JSON.stringify(link), 'EX', 3600);
       this.logger.log(`Found friend link id=${linkId}`);
@@ -109,8 +109,8 @@ export class FriendLinkService {
     if (cached) {
       const friendLinks = JSON.parse(cached) as FriendLink[];
       friendLinks.forEach((friendLink) => {
-        friendLink.created_at = new Date(friendLink.created_at);
-        friendLink.updated_at = new Date(friendLink.updated_at);
+        friendLink.createdAt = new Date(friendLink.createdAt);
+        friendLink.updatedAt = new Date(friendLink.updatedAt);
       });
       this.logger.log(
         `(cache) Found ${friendLinks.length} friendLinks on page ${page}`,
@@ -121,8 +121,8 @@ export class FriendLinkService {
     const [friendLinks] = await this.friendLinkRepo.findAndCount({
       skip: (page - 1) * pageSize,
       take: pageSize,
-      where: { link_status: 1 },
-      order: { created_at: 'DESC' },
+      where: { linkStatus: 1 },
+      order: { createdAt: 'DESC' },
     });
     this.logger.log(`Found ${friendLinks.length} friendLinks for page=${page}`);
     this.logger.debug(`friendLinks: ${JSON.stringify(friendLinks)}`);
@@ -170,8 +170,8 @@ export class FriendLinkService {
       await this.redis.del('friendLink:all');
       await this.redis.del('friendLink:page:*');
       await this.redis.del('friendLink:totalPage:*');
-      await this.redis.del(`friendLink:id:${result.link_id}`);
-      this.logger.log(`Created friend link id=${result.link_id}`);
+      await this.redis.del(`friendLink:id:${result.linkId}`);
+      this.logger.log(`Created friend link id=${result.linkId}`);
       this.logger.debug(`Created FriendLink: ${JSON.stringify(result)}`);
       return result;
     }
@@ -196,13 +196,13 @@ export class FriendLinkService {
     }
     // 只更新有值的字段
     const fields: (keyof FriendLink & keyof UpdateFriendLinkInput)[] = [
-      'link_status',
-      'link_title',
-      'link_url',
-      'link_description',
-      'link_image_bucket_name',
-      'link_image_bucket_region',
-      'link_image_bucket_key',
+      'linkStatus',
+      'linkTitle',
+      'linkUrl',
+      'linkDescription',
+      'linkImageBucketKey',
+      'linkImageBucketName',
+      'linkImageBucketRegion',
     ];
     fields.forEach((key) => {
       if (updateData[key] !== undefined && updateData[key] !== null) {
@@ -239,7 +239,7 @@ export class FriendLinkService {
       return null;
     }
     const result = await this.friendLinkRepo.save({
-      link_id: linkId,
+      linkId: linkId,
       link_status: status,
     });
     if (result) {

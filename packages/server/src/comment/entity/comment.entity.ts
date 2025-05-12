@@ -89,7 +89,7 @@ export class Comment {
     default: () => 'CURRENT_TIMESTAMP',
     comment: '创建时间',
   })
-  created_at!: Date;
+  createdAt!: Date;
 
   /**
    * 最后更新时间
@@ -101,7 +101,7 @@ export class Comment {
     default: () => 'CURRENT_TIMESTAMP',
     comment: '最后更新时间',
   })
-  updated_at!: Date;
+  updatedAt!: Date;
 
   /**
    * 评论状态

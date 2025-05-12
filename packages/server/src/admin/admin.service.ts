@@ -29,8 +29,8 @@ export class AdminService {
     if (cached) {
       const admins = JSON.parse(cached) as Admin[];
       admins.forEach((admin) => {
-        admin.created_at = new Date(admin.created_at);
-        admin.updated_at = new Date(admin.updated_at);
+        admin.createdAt = new Date(admin.createdAt);
+        admin.updatedAt = new Date(admin.updatedAt);
       });
       this.logger.log(`(cache) Found ${admins.length} admins`);
       this.logger.debug(`(cache) Admins: ${JSON.stringify(admins)}`);
@@ -57,8 +57,8 @@ export class AdminService {
     const cached = await this.redis.get(key);
     if (cached) {
       const admin = JSON.parse(cached) as Admin;
-      admin.created_at = new Date(admin.created_at);
-      admin.updated_at = new Date(admin.updated_at);
+      admin.createdAt = new Date(admin.createdAt);
+      admin.updatedAt = new Date(admin.updatedAt);
       this.logger.log(`(cache) Found admin with ID ${id}`);
       this.logger.debug(`(cache) Admin: ${JSON.stringify(admin)}`);
       return admin;
@@ -84,8 +84,8 @@ export class AdminService {
     const cached = await this.redis.get(key);
     if (cached) {
       const admin = JSON.parse(cached) as Admin;
-      admin.created_at = new Date(admin.created_at);
-      admin.updated_at = new Date(admin.updated_at);
+      admin.createdAt = new Date(admin.createdAt);
+      admin.updatedAt = new Date(admin.updatedAt);
       this.logger.log(`(cache) Found admin with NAME ${name}`);
       this.logger.debug(`(cache) Admin: ${JSON.stringify(admin)}`);
       return admin;

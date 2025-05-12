@@ -30,7 +30,6 @@ export class TencentCosService {
    */
   constructor() {
     this.config = tencentCOSConfig.getTypeOrmConfig() as GetCredentialOptions;
-    this.initCOS().catch((err) => this.logger.error('初始化COS失败', err));
     this.bucket = tencentCOSConfig.getValue('TENCENT_COS_BUCKET_NAME');
   }
 
@@ -93,10 +92,10 @@ export class TencentCosService {
             this.logger.log(`Upload file succeed`);
             this.logger.debug(`${JSON.stringify(data)}`);
             resolve({
-              article_title: '',
-              article_bucket_name: this.bucket,
-              article_bucket_region: this.config.region as string,
-              article_bucket_key: key,
+              articleTitle: '',
+              articleBucketName: this.bucket,
+              articleBucketRegion: this.config.region as string,
+              articleBucketKey: key,
             });
           } else {
             return null;
@@ -134,9 +133,9 @@ export class TencentCosService {
             this.logger.log(`Upload file succeed`);
             this.logger.debug(`${JSON.stringify(data)}`);
             resolve({
-              link_image_bucket_name: this.bucket,
-              link_image_bucket_region: this.config.region as string,
-              link_image_bucket_key: key,
+              linkImageBucketName: this.bucket,
+              linkImageBucketRegion: this.config.region as string,
+              linkImageBucketKey: key,
             });
           } else {
             return null;

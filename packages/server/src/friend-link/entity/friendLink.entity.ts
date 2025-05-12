@@ -37,7 +37,7 @@ export class PutFriendLinkLogoRequiredInput {
     name: 'link_image_bucket_name',
     comment: 'COS 存储桶名称',
   })
-  link_image_bucket_name!: string;
+  linkImageBucketName!: string;
 
   /**
    * COS 存储桶所在区域
@@ -49,7 +49,7 @@ export class PutFriendLinkLogoRequiredInput {
     name: 'link_image_bucket_region',
     comment: 'COS 存储桶所在区域',
   })
-  link_image_bucket_region!: string;
+  linkImageBucketRegion!: string;
 
   /**
    * COS 文件 key
@@ -61,7 +61,7 @@ export class PutFriendLinkLogoRequiredInput {
     name: 'link_image_bucket_key',
     comment: 'COS 文件 key',
   })
-  link_image_bucket_key!: string;
+  linkImageBucketKey!: string;
 }
 
 export class PutFriendLinkLogo {
@@ -75,7 +75,7 @@ export class PutFriendLinkLogo {
     name: 'link_image_bucket_name',
     comment: 'COS 存储桶名称',
   })
-  link_image_bucket_name?: string;
+  linkImageBucketName?: string;
 
   /**
    * COS 存储桶所在区域
@@ -87,7 +87,7 @@ export class PutFriendLinkLogo {
     name: 'link_image_bucket_region',
     comment: 'COS 存储桶所在区域',
   })
-  link_image_bucket_region?: string;
+  linkImageBucketRegion?: string;
 
   /**
    * COS 文件 key
@@ -99,7 +99,7 @@ export class PutFriendLinkLogo {
     name: 'link_image_bucket_key',
     comment: 'COS 文件 key',
   })
-  link_image_bucket_key?: string;
+  linkImageBucketKey?: string;
 }
 
 /**
@@ -113,7 +113,7 @@ export class FriendLink extends PutFriendLinkLogo {
    */
   @Field(() => ID, { description: '链接ID' })
   @PrimaryGeneratedColumn({ name: 'link_id' })
-  link_id!: number;
+  linkId!: number;
 
   /**
    * 链接标题
@@ -126,7 +126,7 @@ export class FriendLink extends PutFriendLinkLogo {
     nullable: false,
     comment: '链接标题',
   })
-  link_title!: string;
+  linkTitle!: string;
 
   /**
    * URL地址
@@ -139,7 +139,7 @@ export class FriendLink extends PutFriendLinkLogo {
     nullable: false,
     comment: 'URL地址',
   })
-  link_url!: string;
+  linkUrl!: string;
 
   /**
    * 链接描述（100字符内）
@@ -151,7 +151,7 @@ export class FriendLink extends PutFriendLinkLogo {
     nullable: true,
     comment: '链接描述',
   })
-  link_description?: string;
+  linkDescription?: string;
 
   /**
    * 创建时间
@@ -163,7 +163,7 @@ export class FriendLink extends PutFriendLinkLogo {
     default: () => 'CURRENT_TIMESTAMP',
     comment: '创建时间',
   })
-  created_at!: Date;
+  createdAt!: Date;
 
   /**
    * 最后修改时间
@@ -175,7 +175,7 @@ export class FriendLink extends PutFriendLinkLogo {
     default: () => 'CURRENT_TIMESTAMP',
     comment: '最后修改时间',
   })
-  updated_at!: Date;
+  updatedAt!: Date;
 
   /**
    * 友链状态
@@ -187,14 +187,14 @@ export class FriendLink extends PutFriendLinkLogo {
     default: FriendLinkStatus.Hidden,
     comment: '友链状态',
   })
-  link_status!: FriendLinkStatus;
+  linkStatus!: FriendLinkStatus;
 
   @Field(() => String, { nullable: true, description: 'COS 存储桶名称' })
-  declare link_image_bucket_name?: string;
+  declare linkImageBucketName?: string;
 
   @Field(() => String, { nullable: true, description: 'COS 存储桶所在区域' })
-  declare link_image_bucket_region?: string;
+  declare linkImageBucketRegion?: string;
 
   @Field(() => String, { nullable: true, description: 'COS 文件 key' })
-  declare link_image_bucket_key?: string;
+  declare linkImageBucketKey?: string;
 }

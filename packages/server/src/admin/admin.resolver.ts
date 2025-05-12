@@ -15,7 +15,7 @@ export class AdminResolver {
    * @returns 管理员结果对象
    */
   @Query(() => AdminResult)
-  async findAllAdmin() {
+  async getAllAdmin() {
     const result = await this.adminService.findAll();
     if (result) {
       return {
@@ -33,7 +33,7 @@ export class AdminResolver {
    * @returns 管理员结果对象
    */
   @Query(() => AdminResult, { nullable: true })
-  async findAdminById(@Args('id', { type: () => Int }) id: number) {
+  async getAdminById(@Args('id', { type: () => Int }) id: number) {
     const result = await this.adminService.findById(id);
     if (result) {
       return {
@@ -78,7 +78,7 @@ export class AdminResolver {
    */
   @Mutation(() => AdminResult)
   async updateAdmin(@Args('data') data: UpdateAdminInput) {
-    if (!(await this.findAdminById(data.adminId))) {
+    if (!(await this.getAdminById(data.adminId))) {
       return null;
     }
     const result = await this.adminService.update(data);

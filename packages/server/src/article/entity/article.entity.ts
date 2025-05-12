@@ -38,7 +38,7 @@ export class Article {
    */
   @Field(() => ID, { description: '文章ID' })
   @PrimaryGeneratedColumn({ name: 'article_id' })
-  article_id!: number;
+  articleId!: number;
 
   /**
    * 文章标题
@@ -50,7 +50,7 @@ export class Article {
     name: 'article_title',
     comment: '文章标题',
   })
-  article_title!: string;
+  articleTitle!: string;
 
   /**
    * COS 存储桶名称
@@ -62,7 +62,7 @@ export class Article {
     name: 'article_bucket_name',
     comment: 'COS 存储桶名称',
   })
-  article_bucket_name!: string;
+  articleBucketName!: string;
 
   /**
    * COS 存储桶所在区域
@@ -74,7 +74,7 @@ export class Article {
     name: 'article_bucket_region',
     comment: 'COS 存储桶所在区域',
   })
-  article_bucket_region!: string;
+  articleBucketRegion!: string;
 
   /**
    * COS 文件 key
@@ -86,7 +86,7 @@ export class Article {
     name: 'article_bucket_key',
     comment: 'COS 文件 key',
   })
-  article_bucket_key!: string;
+  articleBucketKey!: string;
 
   /**
    * 创建时间
@@ -98,7 +98,7 @@ export class Article {
     default: () => 'CURRENT_TIMESTAMP',
     comment: '创建时间',
   })
-  created_at!: Date;
+  createdAt!: Date;
 
   /**
    * 最后更新时间
@@ -110,7 +110,7 @@ export class Article {
     default: () => 'CURRENT_TIMESTAMP',
     comment: '最后更新时间',
   })
-  updated_at!: Date;
+  updatedAt!: Date;
 
   /**
    * 文章浏览量
@@ -122,7 +122,7 @@ export class Article {
     default: 0,
     name: 'article_view_count',
   })
-  article_view_count!: number;
+  articleViewCount!: number;
 
   /**
    * 文章状态
@@ -134,5 +134,5 @@ export class Article {
     default: ArticleStatus.Hidden,
     name: 'article_status',
   })
-  article_status!: ArticleStatus;
+  articleStatus!: ArticleStatus;
 }

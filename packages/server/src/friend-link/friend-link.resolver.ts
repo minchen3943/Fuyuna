@@ -20,7 +20,7 @@ export class FriendLinkResolver {
    * 查询所有友链
    * @returns 返回包含所有友链的结果对象
    */
-  async findAllFriendLink() {
+  async getAllFriendLink() {
     const result = await this.friendLinkService.findAll();
     if (result && result.length > 0) {
       return {
@@ -39,7 +39,7 @@ export class FriendLinkResolver {
    * @param pageSize 每页数量
    * @returns 返回指定页码的友链结果对象
    */
-  async findFriendLinkByPage(
+  async getFriendLinkByPage(
     @Args('page', { type: () => Int }) page: number,
     @Args('pageSize', { type: () => Int }) pageSize: number,
   ) {
@@ -88,7 +88,7 @@ export class FriendLinkResolver {
    * @param friend_link_id 友链ID
    * @returns 返回指定ID的友链结果对象
    */
-  async findFriendLinkById(
+  async getFriendLinkById(
     @Args('friend_link_id', { type: () => Int }) friendLinkId: number,
   ) {
     const result = await this.friendLinkService.findById(friendLinkId);
@@ -115,9 +115,9 @@ export class FriendLinkResolver {
    */
   async updateFriendLink(@Args('input') data: UpdateFriendLinkInput) {
     if (
-      data.link_status &&
-      (typeof data.link_status !== 'number' ||
-        !Object.values(FriendLinkStatus).includes(data.link_status))
+      data.linkStatus &&
+      (typeof data.linkStatus !== 'number' ||
+        !Object.values(FriendLinkStatus).includes(data.linkStatus))
     ) {
       return {
         code: 400,
@@ -133,7 +133,7 @@ export class FriendLinkResolver {
     if (result) {
       return {
         code: 200,
-        message: `Friend link updated successfully with ID ${result.link_id}`,
+        message: `Friend link updated successfully with ID ${result.linkId}`,
         data: [result],
       };
     }
@@ -207,14 +207,14 @@ export class FriendLinkResolver {
     }
 
     if (
-      friendLink.link_image_bucket_key &&
-      friendLink.link_image_bucket_region &&
-      friendLink.link_image_bucket_name
+      friendLink.linkImageBucketKey &&
+      friendLink.linkImageBucketRegion &&
+      friendLink.linkImageBucketName
     ) {
       await this.tencentCosService.delObject({
-        Region: friendLink.link_image_bucket_region,
-        Bucket: friendLink.link_image_bucket_name,
-        Key: friendLink.link_image_bucket_key,
+        Region: friendLink.linkImageBucketRegion,
+        Bucket: friendLink.linkImageBucketName,
+        Key: friendLink.linkImageBucketKey,
       });
     }
 

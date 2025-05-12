@@ -50,14 +50,14 @@ export class ArticleController {
   ) {}
 
   /**
-   * 上传文章文件到 COS
+   * 创建文章
    * @param file 上传的文件
    * @returns 上传结果
    */
-  @Post('upload')
+  @Post('')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(
+  async createArticle(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: { articleTitle: string },
   ) {
@@ -96,11 +96,11 @@ export class ArticleController {
         data: data,
       };
     }
-    data.article_title = body.articleTitle;
+    data.articleTitle = body.articleTitle;
     const result = await this.articleService.create(data);
     return {
       code: 200,
-      message: '文件上传成功',
+      message: '创建文章成功',
       data: [result],
     };
   }

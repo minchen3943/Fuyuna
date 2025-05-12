@@ -43,15 +43,15 @@ export class ArticleService {
     if (cached) {
       const articles = JSON.parse(cached) as Article[];
       articles.forEach((article) => {
-        article.created_at = new Date(article.created_at);
+        article.createdAt = new Date(article.createdAt);
       });
       this.logger.log(`(cache) Found ${articles.length} articles`);
       this.logger.debug(`(cache) Articles: ${JSON.stringify(articles)}`);
       return articles;
     }
     const articles = await this.articleRepo.find({
-      where: { article_status: 1 },
-      order: { created_at: 'DESC' },
+      where: { articleStatus: 1 },
+      order: { createdAt: 'DESC' },
     });
     if (articles.length > 0) {
       this.logger.log(`Found ${articles.length} articles`);
@@ -75,13 +75,13 @@ export class ArticleService {
     const cached = await this.redis.get(key);
     if (cached) {
       const article = JSON.parse(cached) as Article;
-      article.created_at = new Date(article.created_at);
-      article.updated_at = new Date(article.updated_at);
+      article.createdAt = new Date(article.createdAt);
+      article.updatedAt = new Date(article.updatedAt);
       this.logger.log(`(cache) Found article with ID ${articleId}`);
       this.logger.debug(`(cache) Article: ${JSON.stringify(article)}`);
       return article;
     }
-    const article = await this.articleRepo.findOneBy({ article_id: articleId });
+    const article = await this.articleRepo.findOneBy({ articleId: articleId });
     if (article) {
       this.logger.log(`Found article with ID ${articleId}`);
       this.logger.debug(`Article: ${JSON.stringify(article)}`);
@@ -106,7 +106,7 @@ export class ArticleService {
     if (cached) {
       const articles = JSON.parse(cached) as Article[];
       articles.forEach((article) => {
-        article.created_at = new Date(article.created_at);
+        article.createdAt = new Date(article.createdAt);
       });
       this.logger.log(
         `(cache) Found ${articles.length} articles on page ${page}`,
@@ -117,8 +117,8 @@ export class ArticleService {
     const articles = await this.articleRepo.find({
       skip: (page - 1) * pageSize,
       take: pageSize,
-      where: { article_status: 1 },
-      order: { created_at: 'DESC' },
+      where: { articleStatus: 1 },
+      order: { createdAt: 'DESC' },
     });
     if (articles.length > 0) {
       await this.redis.set(key, JSON.stringify(articles), 'EX', 18000);
@@ -170,9 +170,9 @@ export class ArticleService {
       await this.redis.del('article:all');
       await this.redis.del(`article:page:*`);
       await this.redis.del(`article:totalPage:*`);
-      await this.redis.del(`article:id:${result.article_id}`);
+      await this.redis.del(`article:id:${result.articleId}`);
       this.logger.log(
-        `Article created successfully with ID ${result.article_id}`,
+        `Article created successfully with ID ${result.articleId}`,
       );
       this.logger.debug(`Article: ${JSON.stringify(result)}`);
       return result;
@@ -194,11 +194,11 @@ export class ArticleService {
       return null;
     }
     const fields: (keyof Article & keyof UpdateArticleInput)[] = [
-      'article_status',
-      'article_title',
-      'article_bucket_name',
-      'article_bucket_region',
-      'article_bucket_key',
+      'articleStatus',
+      'articleTitle',
+      'articleBucketName',
+      'articleBucketRegion',
+      'articleBucketKey',
     ];
 
     fields.forEach((key) => {
@@ -238,7 +238,7 @@ export class ArticleService {
       return null;
     }
     const result = await this.articleRepo.save({
-      ...{ article_id: articleId, article_status: articleStatus },
+      ...{ articleId: articleId, articleStatus: articleStatus },
     });
     if (result) {
       await this.redis.del(`article:id:${articleId}`);
@@ -257,12 +257,12 @@ export class ArticleService {
   }
 
   /**
-   * @method remove
+   * @method delete
    * @description 删除文章
    * @param {number} articleId - 文章ID
    * @returns {Promise<boolean>} 是否删除成功
    */
-  async remove(articleId: number): Promise<boolean> {
+  async delete(articleId: number): Promise<boolean> {
     const result = await this.articleRepo.delete(articleId);
     if (result.affected === 1) {
       await this.redis.del(`article:id:${articleId}`);

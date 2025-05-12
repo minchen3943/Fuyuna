@@ -11,25 +11,25 @@ export class CreateArticleInput {
    * 文章标题
    */
   @Field(() => String, { description: '文章标题' })
-  article_title!: string;
+  articleTitle!: string;
 
   /**
    * COS 存储桶名称
    */
   @Field(() => String, { description: 'COS 存储桶名称' })
-  article_bucket_name!: string;
+  articleBucketName!: string;
 
   /**
    * COS 存储桶区域
    */
   @Field(() => String, { description: 'COS 存储桶区域' })
-  article_bucket_region!: string;
+  articleBucketRegion!: string;
 
   /**
    * COS 文件 key
    */
   @Field(() => String, { description: 'COS 文件 key' })
-  article_bucket_key!: string;
+  articleBucketKey!: string;
 }
 
 /**
@@ -51,7 +51,7 @@ export class UpdateArticleInput {
     nullable: true,
     description: '文章标题',
   })
-  article_title?: string;
+  articleTitle?: string;
 
   /**
    * COS 存储桶名称
@@ -60,7 +60,7 @@ export class UpdateArticleInput {
     nullable: true,
     description: 'COS 存储桶名称',
   })
-  article_bucket_name?: string;
+  articleBucketName?: string;
 
   /**
    * COS 存储桶区域
@@ -69,7 +69,7 @@ export class UpdateArticleInput {
     nullable: true,
     description: 'COS 存储桶区域',
   })
-  article_bucket_region?: string;
+  articleBucketRegion?: string;
 
   /**
    * COS 文件 key
@@ -78,7 +78,7 @@ export class UpdateArticleInput {
     nullable: true,
     description: 'COS 文件 key',
   })
-  article_bucket_key?: string;
+  articleBucketKey?: string;
 
   /**
    * 文章状态
@@ -87,7 +87,7 @@ export class UpdateArticleInput {
     nullable: true,
     description: '文章状态',
   })
-  article_status?: ArticleStatus;
+  articleStatus?: ArticleStatus;
 }
 
 @InputType()
@@ -96,5 +96,5 @@ export class DeleteArticleInput {
    * 文章ID
    */
   @Field(() => Int, { description: '文章ID' })
-  article_id!: number;
+  articleId!: number;
 }

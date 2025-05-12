@@ -51,14 +51,18 @@ export class FriendLinkController {
   ) {}
 
   /**
-   * 上传友链图标到 COS
+   * 创建友链
    * @param file 上传的文件
+   * @param body 友链信息
+   * @param body.linkTitle 友链标题
+   * @param body.linkURL 友链 URL
+   * @param body.linkDescription 友链描述
    * @returns 上传结果
    */
-  @Post('upload')
+  @Post('create')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(
+  async createFriendLink(
     @UploadedFile() file: Express.Multer.File,
     @Body()
     body: { linkTitle: string; linkURL: string; linkDescription?: string },
@@ -72,9 +76,9 @@ export class FriendLinkController {
     }
     if (!file) {
       const friendLink: CreateFriendLinkInput = {
-        link_title: body.linkTitle,
-        link_url: body.linkURL,
-        link_status: 0,
+        linkTitle: body.linkTitle,
+        linkUrl: body.linkURL,
+        linkStatus: 0,
       };
       const result = await this.friendLinkService.createFriendLink(friendLink);
       return {
@@ -101,15 +105,15 @@ export class FriendLinkController {
       };
     }
     const friendLink: CreateFriendLinkInput = {
-      link_title: body.linkTitle,
-      link_url: body.linkURL,
-      link_image_bucket_name: data.link_image_bucket_name,
-      link_image_bucket_region: data.link_image_bucket_region,
-      link_image_bucket_key: data.link_image_bucket_key,
-      link_status: 0,
+      linkTitle: body.linkTitle,
+      linkUrl: body.linkURL,
+      linkImageBucketName: data.linkImageBucketName,
+      linkImageBucketRegion: data.linkImageBucketRegion,
+      linkImageBucketKey: data.linkImageBucketKey,
+      linkStatus: 0,
     };
     if (body.linkDescription) {
-      friendLink.link_description = body.linkDescription;
+      friendLink.linkDescription = body.linkDescription;
     }
     const result = await this.friendLinkService.createFriendLink(friendLink);
     return {
