@@ -11,7 +11,6 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PassThrough } from 'stream';
 import { FriendLinkService } from './friend-link.service';
-import { CreateFriendLinkInput } from './input/friendLink.input';
 
 interface ValidUploadFile {
   buffer: Buffer;
@@ -51,42 +50,17 @@ export class FriendLinkController {
   ) {}
 
   /**
-   * 创建友链
+   * 上传友链图标到 COS
    * @param file 上传的文件
-   * @param body 友链信息
-   * @param body.linkTitle 友链标题
-   * @param body.linkURL 友链 URL
-   * @param body.linkDescription 友链描述
    * @returns 上传结果
    */
-  @Post('create')
+  @Post('upload')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async createFriendLink(
+  async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body()
-    body: { linkTitle: string; linkURL: string; linkDescription?: string },
+    @Body() body: { linkName: string },
   ) {
-    if (!body.linkTitle || !body.linkURL) {
-      return {
-        code: 400,
-        message: '缺少必要参数(linkTitle, linkURL)',
-        data: null,
-      };
-    }
-    if (!file) {
-      const friendLink: CreateFriendLinkInput = {
-        linkTitle: body.linkTitle,
-        linkUrl: body.linkURL,
-        linkStatus: 0,
-      };
-      const result = await this.friendLinkService.createFriendLink(friendLink);
-      return {
-        code: 200,
-        message: '文件上传成功',
-        data: [result],
-      };
-    }
     if (!isValidUploadFile(file)) {
       return {
         code: 400,
@@ -96,29 +70,23 @@ export class FriendLinkController {
     }
     const stream = new PassThrough();
     stream.end(file.buffer);
-    const data = await this.tencentCosService.putFriendLinkLogo(stream);
+    const data = await this.tencentCosService.putObject(stream);
     if (!data) {
       return {
         code: 204,
-        message: '友链创建失败',
+        message: 'Filed to upload file',
         data: data,
       };
     }
-    const friendLink: CreateFriendLinkInput = {
-      linkTitle: body.linkTitle,
-      linkUrl: body.linkURL,
-      linkImageBucketName: data.linkImageBucketName,
-      linkImageBucketRegion: data.linkImageBucketRegion,
-      linkImageBucketKey: data.linkImageBucketKey,
-      linkStatus: 0,
+    // 创建友链对象并保存
+    const friendLink = {
+      link_name: body.linkName,
+      link_logo: data.article_key, // 使用上传的文件路径作为logo
     };
-    if (body.linkDescription) {
-      friendLink.linkDescription = body.linkDescription;
-    }
     const result = await this.friendLinkService.createFriendLink(friendLink);
     return {
       code: 200,
-      message: '友链创建成功',
+      message: '文件上传成功',
       data: [result],
     };
   }

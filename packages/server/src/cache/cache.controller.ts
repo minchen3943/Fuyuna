@@ -1,10 +1,8 @@
-import { Controller, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Delete } from '@nestjs/common';
 import { CacheService } from './cache.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { CacheResult } from './entity/cacheResult.entity';
 
 @Controller('cache')
-@UseGuards(JwtAuthGuard)
 /**
  * 缓存相关接口控制器，负责处理缓存管理相关的 HTTP 请求
  * @remarks 仅允许通过 JwtAuthGuard 认证的用户访问

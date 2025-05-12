@@ -1,8 +1,22 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  ExecutionContext,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../../common/decorators/public.decorator';
+import { Redis } from 'ioredis';
+import { REDIS_CLIENT } from 'src/constants';
+
+declare global {
+  interface User {
+    jti?: string;
+    [key: string]: any;
+  }
+}
 
 /**
  * JWT 认证守卫
@@ -10,20 +24,15 @@ import { IS_PUBLIC_KEY } from '../../common/decorators/public.decorator';
  */
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  /**
-   * 构造函数，注入 Reflector
-   * @param reflector 反射器实例
-   */
-  constructor(private reflector: Reflector) {
+  constructor(
+    private reflector: Reflector,
+    @Inject(REDIS_CLIENT)
+    private readonly redis: Redis,
+  ) {
     super();
   }
 
-  /**
-   * 判断当前请求是否可以激活（即是否通过认证）
-   * @param context 执行上下文
-   * @returns 是否允许通过
-   */
-  canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -33,14 +42,22 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return true;
     }
 
-    return super.canActivate(context);
+    const can = (await super.canActivate(context)) as boolean;
+
+    if (!can) return false;
+
+    const request = this.getRequest(context);
+    const user = request.user as User;
+
+    if (user?.jti) {
+      const isBlacklisted = await this.redis.get(`blacklist:${user.jti}`);
+      if (isBlacklisted) {
+        throw new UnauthorizedException('Token has been revoked');
+      }
+    }
+    return true;
   }
 
-  /**
-   * 处理请求，返回请求对象
-   * @param req Express 请求对象
-   * @returns 请求对象
-   */
   getRequest(context: ExecutionContext): Request {
     const ctx: { req?: Request } = context.getArgByIndex(2);
     return ctx?.req || context.switchToHttp().getRequest();

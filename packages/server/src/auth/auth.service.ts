@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AdminAuthPayLoadDto } from './dto/auth.dto';
 import { AdminService } from '../admin/admin.service';
 import { JwtService } from '@nestjs/jwt';
+import { v4 as uuidV4 } from 'uuid';
 
 /**
  * 认证服务
@@ -35,7 +36,8 @@ export class AuthService {
       return null;
     }
     if (await this.adminService.checkAdminPassWord(admin, data.adminPassword)) {
-      const payload = { username: data.adminName };
+      const jti = uuidV4();
+      const payload = { username: data.adminName, jti };
       const access_token = await this.jwtService.signAsync(payload);
       this.logger.log(`Admin get access_token succeed with ${data.adminName}`);
       this.logger.debug(`Access_token: ${access_token}`);
