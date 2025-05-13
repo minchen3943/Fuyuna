@@ -68,22 +68,22 @@ export class ArticleController {
     if (!isValidUploadFile(file)) {
       return {
         code: 400,
-        message: '无效的文件',
-        data: null,
+        message: 'Invalid file.',
+        data: [],
       };
     }
     if (!isMarkdown) {
       return {
-        code: 400,
-        message: '只允许上传 Markdown 文件(.md)',
-        data: null,
+        code: 415,
+        message: 'Only Markdown files (.md) are allowed for upload.',
+        data: [],
       };
     }
     if (!body.articleTitle) {
       return {
         code: 400,
-        message: '缺少必要参数(articleTitle)',
-        data: null,
+        message: 'Missing required parameter (articleTitle).',
+        data: [],
       };
     }
     const stream = new PassThrough();
@@ -91,16 +91,16 @@ export class ArticleController {
     const data = await this.tencentCosService.putArticle(stream);
     if (!data) {
       return {
-        code: 204,
-        message: 'Filed to upload file',
+        code: 500,
+        message: 'Failed to upload file.',
         data: data,
       };
     }
     data.articleTitle = body.articleTitle;
     const result = await this.articleService.create(data);
     return {
-      code: 200,
-      message: '创建文章成功',
+      code: 201,
+      message: 'Article created successfully.',
       data: [result],
     };
   }

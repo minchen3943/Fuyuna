@@ -23,10 +23,14 @@ export class CacheController {
   async clearCache(): Promise<CacheResult> {
     const result = await this.cacheService.clearAllCache();
     if (typeof result === 'number' && result > 0) {
-      return { code: 200, message: 'Cache cleared successfully', data: result };
+      return {
+        code: 200,
+        message: 'Cache cleared successfully.',
+        data: result,
+      };
     } else if (result === 0) {
-      return { code: 200, message: 'No cache to clear', data: result };
+      return { code: 204, message: 'No cache to clear.', data: result };
     }
-    return { code: 204, message: 'Failed to clear cache', data: null };
+    return { code: 500, message: 'Failed to clear cache.', data: [] };
   }
 }

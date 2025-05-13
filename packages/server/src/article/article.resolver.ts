@@ -29,7 +29,7 @@ export class ArticleResolver {
         data: result,
       };
     }
-    return { code: 204, message: 'No articles found', data: [] };
+    return { code: 404, message: 'No articles found.', data: [] };
   }
 
   @Query(() => ArticleResult)
@@ -47,13 +47,13 @@ export class ArticleResolver {
     if (result && result.length > 0) {
       return {
         code: 200,
-        message: `Found ${result.length} articles on page ${page}`,
+        message: `Found ${result.length} articles on page ${page}.`,
         data: result,
       };
     }
     return {
-      code: 204,
-      message: `No articles found on page ${page}`,
+      code: 404,
+      message: `No articles found on page ${page}.`,
       data: [],
     };
   }
@@ -70,14 +70,14 @@ export class ArticleResolver {
     if (pageSize <= 0) {
       return {
         code: 400,
-        message: 'Page size must be greater than 0',
-        data: null,
+        message: 'Page size must be greater than 0.',
+        data: [],
       };
     }
     const result = await this.articleService.getTotalPages(pageSize);
     return {
       code: 200,
-      message: `Total pages: ${result.totalPages} for page size ${pageSize}`,
+      message: `Total pages: ${result.totalPages} for page size ${pageSize}.`,
       data: result.totalPages,
     };
   }
@@ -93,11 +93,15 @@ export class ArticleResolver {
     if (result) {
       return {
         code: 200,
-        message: `Found article with ID ${id}`,
+        message: `Found article with ID ${id}.`,
         data: [result],
       };
     }
-    return { code: 204, message: `No article found with ID ${id}`, data: null };
+    return {
+      code: 404,
+      message: `No article found with ID ${id}.`,
+      data: [],
+    };
   }
 
   @Mutation(() => ArticleResult)
@@ -112,11 +116,11 @@ export class ArticleResolver {
     if (result) {
       return {
         code: 200,
-        message: `Article created successfully with ID ${result.articleId}`,
+        message: `Article created successfully with ID ${result.articleId}.`,
         data: [result],
       };
     }
-    return { code: 204, message: 'Failed to create article', data: null };
+    return { code: 500, message: `Failed to create article.`, data: [] };
   }
 
   @Mutation(() => ArticleResult)
@@ -130,8 +134,8 @@ export class ArticleResolver {
     if (!data.articleId) {
       return {
         code: 400,
-        message: 'Missing required parameter (articleId)',
-        data: null,
+        message: 'Missing required parameter (articleId).',
+        data: [],
       };
     }
     if (
@@ -141,8 +145,8 @@ export class ArticleResolver {
     ) {
       return {
         code: 400,
-        message: 'Invalid article_status value',
-        data: null,
+        message: 'Invalid article_status value.',
+        data: [],
       };
     }
     const result = await this.articleService.update(data);
@@ -150,15 +154,15 @@ export class ArticleResolver {
     if (result) {
       return {
         code: 200,
-        message: `Article updated successfully with ID ${result.articleId}`,
+        message: `Article updated successfully with ID ${result.articleId}.`,
         data: [result],
       };
     }
 
     return {
-      code: 204,
-      message: `Failed to update article with ID ${data.articleId}`,
-      data: null,
+      code: 500,
+      message: `Failed to update article with ID ${data.articleId}.`,
+      data: [],
     };
   }
 
@@ -180,8 +184,8 @@ export class ArticleResolver {
     ) {
       return {
         code: 400,
-        message: 'Invalid article_status value',
-        data: null,
+        message: 'Invalid article_status value.',
+        data: [],
       };
     }
     const result = await this.articleService.updateStatus(
@@ -192,15 +196,15 @@ export class ArticleResolver {
     if (result) {
       return {
         code: 200,
-        message: `Article status updated successfully with ID ${articleId}`,
+        message: `Article status updated successfully with ID ${articleId}.`,
         data: [result],
       };
     }
 
     return {
-      code: 204,
-      message: `Failed to update article status with ID ${articleId}`,
-      data: null,
+      code: 500,
+      message: `Failed to update article status with ID ${articleId}.`,
+      data: [],
     };
   }
 
@@ -217,9 +221,9 @@ export class ArticleResolver {
     const article = await this.articleService.findById(articleId);
     if (!article) {
       return {
-        code: 204,
-        message: `No article found with ID ${articleId}`,
-        data: null,
+        code: 404,
+        message: `No article found with ID ${articleId}.`,
+        data: [],
       };
     }
     await this.tencentCosService.delObject({
@@ -232,15 +236,15 @@ export class ArticleResolver {
     if (result === true) {
       return {
         code: 200,
-        message: `Article deleted successfully with ID ${articleId}`,
-        data: null,
+        message: `Article deleted successfully with ID ${articleId}.`,
+        data: [],
       };
     }
 
     return {
-      code: 204,
-      message: `Failed to delete article with ID ${articleId}`,
-      data: null,
+      code: 500,
+      message: `Failed to delete article with ID ${articleId}.`,
+      data: [],
     };
   }
 }

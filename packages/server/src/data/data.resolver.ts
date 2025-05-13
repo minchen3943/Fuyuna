@@ -15,11 +15,11 @@ export class DataResolver {
     if (result) {
       return {
         code: 200,
-        message: 'Data retrieved successfully',
+        message: 'Data retrieved successfully.',
         data: result,
       };
     }
-    return { code: 204, message: 'Filed to find data', data: null };
+    return { code: 404, message: 'Failed to find data.', data: [] };
   }
 
   @Query(() => DataResult)
@@ -28,11 +28,11 @@ export class DataResolver {
     if (result !== null) {
       return {
         code: 200,
-        message: 'Visit count retrieved successfully',
+        message: 'Visit count retrieved successfully.',
         data: result,
       };
     }
-    return { code: 204, message: 'Filed to find visit count', data: null };
+    return { code: 404, message: 'Failed to find visit count.', data: [] };
   }
 
   @Query(() => DataResult)
@@ -41,11 +41,11 @@ export class DataResolver {
     if (result !== null) {
       return {
         code: 200,
-        message: 'Like count retrieved successfully',
+        message: 'Like count retrieved successfully.',
         data: result,
       };
     }
-    return { code: 204, message: 'Filed to find like count', data: null };
+    return { code: 404, message: 'Failed to find like count.', data: [] };
   }
 
   @Mutation(() => DataResult)
@@ -54,11 +54,15 @@ export class DataResolver {
     if (result !== null) {
       return {
         code: 200,
-        message: 'Visit count incremented successfully',
+        message: 'Visit count incremented successfully.',
         data: result,
       };
     }
-    return { code: 204, message: 'Filed to increment visit count', data: null };
+    return {
+      code: 500,
+      message: 'Failed to increment visit count.',
+      data: [],
+    };
   }
 
   @Mutation(() => DataResult)
@@ -67,11 +71,15 @@ export class DataResolver {
     if (result !== null) {
       return {
         code: 200,
-        message: 'Like count incremented successfully',
+        message: 'Like count incremented successfully.',
         data: result,
       };
     }
-    return { code: 204, message: 'Filed to increment like count', data: null };
+    return {
+      code: 500,
+      message: 'Failed to increment like count.',
+      data: [],
+    };
   }
 
   @Mutation(() => DataResult)
@@ -80,11 +88,11 @@ export class DataResolver {
     if (result !== null) {
       return {
         code: 200,
-        message: 'Visit count reset successfully',
+        message: 'Visit count reset successfully.',
         data: result,
       };
     }
-    return { code: 204, message: 'Filed to reset visit count', data: null };
+    return { code: 500, message: 'Failed to reset visit count.', data: [] };
   }
 
   @Mutation(() => DataResult)
@@ -93,10 +101,10 @@ export class DataResolver {
     if (result !== null) {
       return {
         code: 200,
-        message: 'Like count reset successfully',
+        message: 'Like count reset successfully.',
         data: result,
       };
     }
-    return { code: 204, message: 'Filed to reset like count', data: null };
+    return { code: 500, message: 'Failed to reset like count.', data: [] };
   }
 }

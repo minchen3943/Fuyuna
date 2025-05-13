@@ -29,7 +29,7 @@ export class FriendLinkResolver {
         data: result,
       };
     }
-    return { code: 204, message: 'No friend links found', data: [] };
+    return { code: 404, message: 'No friend links found.', data: [] };
   }
 
   @Query(() => FriendLinkResult)
@@ -52,8 +52,8 @@ export class FriendLinkResolver {
       };
     }
     return {
-      code: 204,
-      message: `No friend links found on page ${page}`,
+      code: 404,
+      message: `No friend links found on page ${page}.`,
       data: [],
     };
   }
@@ -70,14 +70,14 @@ export class FriendLinkResolver {
     if (pageSize <= 0) {
       return {
         code: 400,
-        message: 'Page size must be greater than 0',
-        data: null,
+        message: 'Page size must be greater than 0.',
+        data: [],
       };
     }
     const result = await this.friendLinkService.getTotalPages(pageSize);
     return {
       code: 200,
-      message: `Total pages: ${result.totalPages} for page size ${pageSize}`,
+      message: `Total pages: ${result.totalPages} for page size ${pageSize}.`,
       data: result.totalPages,
     };
   }
@@ -95,14 +95,14 @@ export class FriendLinkResolver {
     if (result) {
       return {
         code: 200,
-        message: `Found friend link with ID ${friendLinkId}`,
+        message: `Found friend link with ID ${friendLinkId}.`,
         data: [result],
       };
     }
     return {
       code: 204,
-      message: `No friend link found with ID ${friendLinkId}`,
-      data: null,
+      message: `No friend link found with ID ${friendLinkId}.`,
+      data: [],
     };
   }
 
@@ -121,8 +121,8 @@ export class FriendLinkResolver {
     ) {
       return {
         code: 400,
-        message: 'Invalid link_status value',
-        data: null,
+        message: 'Invalid link_status value.',
+        data: [],
       };
     }
     const result = await this.friendLinkService.updateFriendLink(
@@ -133,15 +133,15 @@ export class FriendLinkResolver {
     if (result) {
       return {
         code: 200,
-        message: `Friend link updated successfully with ID ${result.linkId}`,
+        message: `Friend link updated successfully with ID ${result.linkId}.`,
         data: [result],
       };
     }
 
     return {
       code: 204,
-      message: `Failed to update friend link with ID ${data.linkId}`,
-      data: null,
+      message: `Failed to update friend link with ID ${data.linkId}.`,
+      data: [],
     };
   }
 
@@ -163,8 +163,8 @@ export class FriendLinkResolver {
     ) {
       return {
         code: 400,
-        message: 'Invalid link_status value',
-        data: null,
+        message: 'Invalid link_status value.',
+        data: [],
       };
     }
     const result = await this.friendLinkService.updateStatus(
@@ -175,15 +175,15 @@ export class FriendLinkResolver {
     if (result) {
       return {
         code: 200,
-        message: `Friend link status updated successfully with ID ${friendLinkId}`,
+        message: `Friend link status updated successfully with ID ${friendLinkId}.`,
         data: [result],
       };
     }
 
     return {
-      code: 204,
-      message: `Failed to update friend link status with ID ${friendLinkId}`,
-      data: null,
+      code: 500,
+      message: `Failed to update friend link status with ID ${friendLinkId}.`,
+      data: [],
     };
   }
 
@@ -200,9 +200,9 @@ export class FriendLinkResolver {
     const friendLink = await this.friendLinkService.findById(friendLinkId);
     if (!friendLink) {
       return {
-        code: 204,
-        message: `No friend link found with ID ${friendLinkId}`,
-        data: null,
+        code: 404,
+        message: `No friend link found with ID ${friendLinkId}.`,
+        data: [],
       };
     }
 
@@ -223,15 +223,15 @@ export class FriendLinkResolver {
     if (result === true) {
       return {
         code: 200,
-        message: `Friend link deleted successfully with ID ${friendLinkId}`,
-        data: null,
+        message: `Friend link deleted successfully with ID ${friendLinkId}.`,
+        data: [],
       };
     }
 
     return {
-      code: 204,
-      message: `Failed to delete friend link with ID ${friendLinkId}`,
-      data: null,
+      code: 500,
+      message: `Failed to delete friend link with ID ${friendLinkId}.`,
+      data: [],
     };
   }
 }

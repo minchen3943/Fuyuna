@@ -19,23 +19,23 @@ export class AuthController {
    */
   async adminLogin(@Body() data: AdminAuthPayLoadDto) {
     if (!data || !data.adminName || !data.adminPassword) {
-      return { code: 400, message: `Request body error`, data: null };
+      return { code: 400, message: 'Request body is invalid.', data: [] };
     }
     const result = await this.authService.validateAdmin(data);
     if (result) {
       return {
         code: 200,
-        message: `Login admin succeed`,
+        message: 'Admin login succeeded.',
         data: { access_token: result },
       };
     } else if (!result) {
       return {
         code: 401,
-        message: `The username or password is incorrect`,
-        data: null,
+        message: 'The username or password is incorrect.',
+        data: [],
       };
     }
-    return { code: 401, message: `Failed to login admin`, data: null };
+    return { code: 401, message: 'Failed to login as admin.', data: [] };
   }
 
   @Get('admin/token')
@@ -48,14 +48,14 @@ export class AuthController {
     if (req.user) {
       return {
         code: 200,
-        message: 'Login succeed',
+        message: 'Login succeeded.',
         data: req.user,
       };
     } else {
       return {
         code: 401,
-        message: 'Unauthorized',
-        data: null,
+        message: 'Unauthorized.',
+        data: [],
       };
     }
   }

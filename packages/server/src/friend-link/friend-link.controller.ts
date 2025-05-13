@@ -70,8 +70,8 @@ export class FriendLinkController {
     if (!body.linkTitle || !body.linkURL) {
       return {
         code: 400,
-        message: '缺少必要参数(linkTitle, linkURL)',
-        data: null,
+        message: 'Missing required parameters (linkTitle, linkURL).',
+        data: [],
       };
     }
     if (!file) {
@@ -82,16 +82,16 @@ export class FriendLinkController {
       };
       const result = await this.friendLinkService.createFriendLink(friendLink);
       return {
-        code: 200,
-        message: '文件上传成功',
+        code: 201,
+        message: 'Friend link created successfully.',
         data: [result],
       };
     }
     if (!isValidUploadFile(file)) {
       return {
         code: 400,
-        message: '无效的文件',
-        data: null,
+        message: 'Invalid file.',
+        data: [],
       };
     }
     const stream = new PassThrough();
@@ -99,8 +99,8 @@ export class FriendLinkController {
     const data = await this.tencentCosService.putFriendLinkLogo(stream);
     if (!data) {
       return {
-        code: 204,
-        message: '友链创建失败',
+        code: 500,
+        message: 'Failed to create friend link.',
         data: data,
       };
     }
@@ -117,8 +117,8 @@ export class FriendLinkController {
     }
     const result = await this.friendLinkService.createFriendLink(friendLink);
     return {
-      code: 200,
-      message: '友链创建成功',
+      code: 201,
+      message: 'Friend link created successfully.',
       data: [result],
     };
   }
