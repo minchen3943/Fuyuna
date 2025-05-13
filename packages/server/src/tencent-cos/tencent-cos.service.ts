@@ -161,7 +161,7 @@ export class TencentCosService {
               : new Error(err.message || JSON.stringify(err)),
           );
         }
-        this.logger.log('Delete article succeed');
+        this.logger.log('Delete object succeed');
         resolve(null);
       });
     });
