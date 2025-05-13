@@ -26,13 +26,6 @@ class PortConfig {
   getNestPortConfig() {
     return this.getValue('NEST_PORT');
   }
-
-  getNextPortConfig() {
-    return this.getValue('NEXT_PORT');
-  }
 }
-const portConfig = new PortConfig(process.env).ensureValues([
-  'NEST_PORT',
-  'NEXT_PORT',
-]);
+const portConfig = new PortConfig(process.env).ensureValues(['NEST_PORT']);
 export { portConfig };

@@ -3,7 +3,6 @@ declare class PortConfig {
   public getValue(key: string, throwOnMissing?: boolean): string;
   public ensureValues(keys: string[]): this;
   public getNestPortConfig(): number | string;
-  public getNestPortConfig(): number | string;
 }
 
 declare const portConfig: PortConfig;
