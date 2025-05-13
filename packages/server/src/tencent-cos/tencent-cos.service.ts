@@ -30,6 +30,7 @@ export class TencentCosService {
    */
   constructor() {
     this.config = tencentCOSConfig.getTypeOrmConfig() as GetCredentialOptions;
+    this.initCOS().catch((err) => this.logger.error('初始化COS失败', err));
     this.bucket = tencentCOSConfig.getValue('TENCENT_COS_BUCKET_NAME');
   }
 

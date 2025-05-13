@@ -3,10 +3,11 @@
   "author": "fuyuna",
   "private": true,
   "license": "AGPL-3.0-only",
-  "packageManager": "pnpm@10.9.0",
+  "packageManager": "pnpm@10.10.0",
   "scripts": {
     "start:client": "pnpm --filter @fuyuna/client dev",
     "start:server": "pnpm --filter @fuyuna/server start:dev",
+    "build:all": "pnpm -r --filter=./packages/* run build",
     "build:client": "pnpm --filter @fuyuna/client build",
     "build:server": "pnpm --filter @fuyuna/server build"
   },
