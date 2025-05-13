@@ -38,6 +38,7 @@ class GraphqlConfig {
       sortSchema: this.isSortSchema(),
       playground: !this.isProduction(),
       debug: !this.isProduction(),
+      path: '/api/graphql',
     };
   }
 }

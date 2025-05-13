@@ -52,7 +52,6 @@ import { FriendLinkModule } from './friend-link/friend-link.module';
     FriendLinkModule,
   ],
 
-  controllers: [],
   providers: [AdminResolver],
 })
 export class AppModule {}
