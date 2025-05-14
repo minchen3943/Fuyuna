@@ -1,6 +1,6 @@
 packages:
-  - packages/*
-  - public/**
+  - apps/*
+  - packages/**
 ignoredBuiltDependencies:
   - unrs-resolver
 onlyBuiltDependencies:
