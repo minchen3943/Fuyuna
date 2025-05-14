@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "license": "AGPL-3.0-only",
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "start:client": "pnpm --filter @fuyuna/client dev",
     "start:server": "pnpm --filter @fuyuna/server start:dev --watch",
