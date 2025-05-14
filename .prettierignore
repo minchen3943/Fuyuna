@@ -1,7 +1,6 @@
 build/
 dist/
-coverage/
 **/.next/**
-
+**/dist/
 node_modules/
 **/.git/

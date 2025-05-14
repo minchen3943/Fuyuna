@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
 import Redis from 'ioredis';
 import { REDIS_CLIENT } from 'src/constants';
+import { Request } from 'express';
 
 @Resolver(() => AdminResult)
 @UseGuards(JwtAuthGuard)

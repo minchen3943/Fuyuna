@@ -22,7 +22,14 @@ const compat = new FlatCompat({
 const pluginPrettier = require('eslint-plugin-prettier');
 
 export default [
-  globalIgnores(['**/.next/**', 'build/', 'dist/', '.next/', 'node_modules/']),
+  globalIgnores([
+    '**/.next/**',
+    '**/dist/**',
+    'build/',
+    'dist/',
+    '.next/',
+    'node_modules/',
+  ]),
   // ────────────────────────────────────────────────────────────
   // A) 顶层：展开 eslint:recommended 与 Prettier 推荐配置
   // ────────────────────────────────────────────────────────────
