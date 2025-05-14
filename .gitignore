@@ -1,3 +1,5 @@
 node_modules
 build
 Fuyuna.code-workspace
+.idea
+.vscode
