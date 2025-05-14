@@ -29,7 +29,7 @@ export class CodeToStatusInterceptor implements NestInterceptor {
           message: value.message,
           data: value.data,
         };
-      }),
+      })
     );
   }
 }

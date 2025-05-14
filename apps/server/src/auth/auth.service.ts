@@ -19,7 +19,7 @@ export class AuthService {
    */
   constructor(
     private readonly adminService: AdminService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   /**
@@ -28,7 +28,7 @@ export class AuthService {
    * @returns 校验结果
    */
   public async validateAdmin(
-    data: AdminAuthPayLoadDto,
+    data: AdminAuthPayLoadDto
   ): Promise<string | null> {
     const admin = await this.adminService.findByName(data.adminName);
     if (!admin) {

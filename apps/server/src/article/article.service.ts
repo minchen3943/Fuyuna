@@ -30,7 +30,7 @@ export class ArticleService {
     @InjectRepository(Article)
     private readonly articleRepo: Repository<Article>,
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis,
+    private readonly redis: Redis
   ) {}
 
   /**
@@ -109,7 +109,7 @@ export class ArticleService {
         article.createdAt = new Date(article.createdAt);
       });
       this.logger.log(
-        `(cache) Found ${articles.length} articles on page ${page}`,
+        `(cache) Found ${articles.length} articles on page ${page}`
       );
       this.logger.debug(`(cache) Articles: ${JSON.stringify(articles)}`);
       return articles;
@@ -144,7 +144,7 @@ export class ArticleService {
       const totalArticles = JSON.parse(cached) as number;
       const totalPages = Math.ceil(totalArticles / pageSize);
       this.logger.log(
-        `(cache) Total pages: ${totalPages} for page size ${pageSize}`,
+        `(cache) Total pages: ${totalPages} for page size ${pageSize}`
       );
       this.logger.debug(`Total articles: ${totalArticles}`);
       return { totalPages };
@@ -172,7 +172,7 @@ export class ArticleService {
       await this.redis.del(`article:totalPage:*`);
       await this.redis.del(`article:id:${result.articleId}`);
       this.logger.log(
-        `Article created successfully with ID ${result.articleId}`,
+        `Article created successfully with ID ${result.articleId}`
       );
       this.logger.debug(`Article: ${JSON.stringify(result)}`);
       return result;
@@ -232,7 +232,7 @@ export class ArticleService {
    */
   async updateStatus(
     articleId: number,
-    articleStatus: number,
+    articleStatus: number
   ): Promise<Article | null> {
     if (!(await this.findById(articleId))) {
       return null;
@@ -246,7 +246,7 @@ export class ArticleService {
       await this.redis.del(`article:page:*`);
       await this.redis.del(`article:totalPage:*`);
       this.logger.log(
-        `Article status updated successfully for ID ${articleId}`,
+        `Article status updated successfully for ID ${articleId}`
       );
       this.logger.debug(`Updated article status: ${articleStatus}`);
       return this.findById(articleId);

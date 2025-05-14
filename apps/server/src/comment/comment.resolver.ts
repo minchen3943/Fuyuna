@@ -45,7 +45,7 @@ export class CommentResolver {
   @Query(() => CommentResult)
   async getCommentByPage(
     @Args('page', { type: () => Int }) page: number,
-    @Args('pageSize', { type: () => Int }) pageSize: number,
+    @Args('pageSize', { type: () => Int }) pageSize: number
   ) {
     const result = await this.commentService.findByPage(page, pageSize);
     if (result && result.length > 0) {
@@ -69,7 +69,7 @@ export class CommentResolver {
    */
   @Query(() => TotalPagesOutput)
   async getCommentTotalPages(
-    @Args('pageSize', { type: () => Int }) pageSize: number,
+    @Args('pageSize', { type: () => Int }) pageSize: number
   ) {
     if (pageSize <= 0) {
       return {
@@ -170,7 +170,7 @@ export class CommentResolver {
   @UseGuards(JwtAuthGuard)
   async updateCommentStatus(
     @Args('comment_id', { type: () => Int }) comment_id: number,
-    @Args('comment_status', { type: () => Int }) comment_status: number,
+    @Args('comment_status', { type: () => Int }) comment_status: number
   ) {
     if (
       typeof comment_status !== 'number' ||
@@ -184,7 +184,7 @@ export class CommentResolver {
     }
     const result = await this.commentService.updateStatus(
       comment_id,
-      comment_status,
+      comment_status
     );
     if (result) {
       return {
@@ -204,7 +204,7 @@ export class CommentResolver {
   @Mutation(() => CommentResult)
   @UseGuards(JwtAuthGuard)
   async deleteComment(
-    @Args('comment_id', { type: () => Int }) comment_id: number,
+    @Args('comment_id', { type: () => Int }) comment_id: number
   ) {
     const result = await this.commentService.delete(comment_id);
     if (result === true) {

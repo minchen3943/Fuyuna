@@ -16,7 +16,7 @@ export class CacheService {
    */
   constructor(
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis,
+    private readonly redis: Redis
   ) {}
 
   /**

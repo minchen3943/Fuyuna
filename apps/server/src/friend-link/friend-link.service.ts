@@ -33,7 +33,7 @@ export class FriendLinkService {
     @InjectRepository(FriendLink)
     private readonly friendLinkRepo: Repository<FriendLink>,
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis,
+    private readonly redis: Redis
   ) {}
 
   /**
@@ -102,7 +102,7 @@ export class FriendLinkService {
    */
   public async findByPage(
     page: number,
-    pageSize: number,
+    pageSize: number
   ): Promise<FriendLink[]> {
     const key = `friendLink:page:${page}:${pageSize}`;
     const cached = await this.redis.get(key);
@@ -113,7 +113,7 @@ export class FriendLinkService {
         friendLink.updatedAt = new Date(friendLink.updatedAt);
       });
       this.logger.log(
-        `(cache) Found ${friendLinks.length} friendLinks on page ${page}`,
+        `(cache) Found ${friendLinks.length} friendLinks on page ${page}`
       );
       this.logger.debug(`(cache) friendLinks: ${JSON.stringify(friendLinks)}`);
       return friendLinks;
@@ -136,7 +136,7 @@ export class FriendLinkService {
    * @returns 包含总页数的对象
    */
   public async getTotalPages(
-    pageSize: number,
+    pageSize: number
   ): Promise<{ totalPages: number }> {
     const key = `friendLink:totalPage:${pageSize}`;
     const cached = await this.redis.get(key);
@@ -144,7 +144,7 @@ export class FriendLinkService {
       const totalLinks = JSON.parse(cached) as number;
       const totalPages = Math.ceil(totalLinks / pageSize);
       this.logger.log(
-        `(cache) Total pages: ${totalPages} for page size ${pageSize}`,
+        `(cache) Total pages: ${totalPages} for page size ${pageSize}`
       );
       this.logger.debug(`Total friend links: ${totalLinks}`);
       return { totalPages };
@@ -163,7 +163,7 @@ export class FriendLinkService {
    * @returns 创建的友链对象或 null
    */
   public async createFriendLink(
-    friendLink: CreateFriendLinkInput,
+    friendLink: CreateFriendLinkInput
   ): Promise<FriendLink | null> {
     const result = await this.friendLinkRepo.save(friendLink);
     if (result) {
@@ -187,7 +187,7 @@ export class FriendLinkService {
    */
   public async updateFriendLink(
     linkId: number,
-    updateData: UpdateFriendLinkInput,
+    updateData: UpdateFriendLinkInput
   ): Promise<FriendLink | null> {
     const friendLink = await this.findById(linkId);
     if (!friendLink) {
@@ -232,7 +232,7 @@ export class FriendLinkService {
    */
   public async updateStatus(
     linkId: number,
-    status: number,
+    status: number
   ): Promise<FriendLink | null> {
     if (!(await this.findById(linkId))) {
       this.logger.warn(`No friend link found for status update, id=${linkId}`);
@@ -248,7 +248,7 @@ export class FriendLinkService {
       await this.redis.del('friendLink:page:*');
       await this.redis.del('friendLink:totalPage:*');
       this.logger.log(
-        `Friend link status updated successfully for ID ${linkId}`,
+        `Friend link status updated successfully for ID ${linkId}`
       );
       this.logger.debug(`Updated friend link status: ${status}`);
       return this.findById(linkId);

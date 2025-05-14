@@ -27,7 +27,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(
     private reflector: Reflector,
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis,
+    private readonly redis: Redis
   ) {
     super();
   }

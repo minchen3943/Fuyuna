@@ -1,13 +1,14 @@
 packages:
-  - apps/*
-  - packages/**
+  - 'apps/client'
+  - 'apps/server'
+  - 'packages/configs'
 ignoredBuiltDependencies:
-  - unrs-resolver
+  - 'unrs-resolver'
 onlyBuiltDependencies:
   - '@apollo/protobufjs'
   - '@nestjs/core'
   - '@swc/core'
   - '@tailwindcss/oxide'
-  - core-js
-  - esbuild
-  - sharp
+  - 'core-js'
+  - 'esbuild'
+  - 'sharp'

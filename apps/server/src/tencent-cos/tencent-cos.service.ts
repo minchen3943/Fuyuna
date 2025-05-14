@@ -87,7 +87,7 @@ export class TencentCosService {
             reject(
               err instanceof Error
                 ? err
-                : new Error(err.message || JSON.stringify(err)),
+                : new Error(err.message || JSON.stringify(err))
             );
           } else if (data.statusCode === 200) {
             this.logger.log(`Upload file succeed`);
@@ -101,7 +101,7 @@ export class TencentCosService {
           } else {
             return null;
           }
-        },
+        }
       );
     });
   }
@@ -128,7 +128,7 @@ export class TencentCosService {
             reject(
               err instanceof Error
                 ? err
-                : new Error(err.message || JSON.stringify(err)),
+                : new Error(err.message || JSON.stringify(err))
             );
           } else if (data.statusCode === 200) {
             this.logger.log(`Upload file succeed`);
@@ -141,7 +141,7 @@ export class TencentCosService {
           } else {
             return null;
           }
-        },
+        }
       );
     });
   }
@@ -159,7 +159,7 @@ export class TencentCosService {
           reject(
             err instanceof Error
               ? err
-              : new Error(err.message || JSON.stringify(err)),
+              : new Error(err.message || JSON.stringify(err))
           );
         }
         this.logger.log('Delete object succeed');

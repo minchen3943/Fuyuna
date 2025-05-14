@@ -47,7 +47,7 @@ export class FriendLinkController {
    */
   constructor(
     private readonly tencentCosService: TencentCosService,
-    private readonly friendLinkService: FriendLinkService,
+    private readonly friendLinkService: FriendLinkService
   ) {}
 
   /**
@@ -65,7 +65,7 @@ export class FriendLinkController {
   async createFriendLink(
     @UploadedFile() file: Express.Multer.File,
     @Body()
-    body: { linkTitle: string; linkURL: string; linkDescription?: string },
+    body: { linkTitle: string; linkURL: string; linkDescription?: string }
   ) {
     if (!body.linkTitle || !body.linkURL) {
       return {

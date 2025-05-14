@@ -24,7 +24,7 @@ export class DataService {
    */
   constructor(
     @InjectRepository(Data)
-    private readonly dataRepo: Repository<Data>,
+    private readonly dataRepo: Repository<Data>
   ) {}
 
   /**

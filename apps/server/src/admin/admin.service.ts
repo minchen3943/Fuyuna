@@ -16,7 +16,7 @@ export class AdminService {
     @InjectRepository(Admin)
     private readonly adminRepo: Repository<Admin>,
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis,
+    private readonly redis: Redis
   ) {}
 
   /**
@@ -168,7 +168,7 @@ export class AdminService {
    */
   public async updateActive(
     id: number,
-    isActive: boolean,
+    isActive: boolean
   ): Promise<Admin | null> {
     if (!(await this.findById(id))) {
       return null;
@@ -177,10 +177,10 @@ export class AdminService {
     await this.redis.del(`user:all`);
     await this.redis.del(`user:id:${id}`);
     this.logger.log(
-      `Updated admin active status id=${id} isActive=${isActive}`,
+      `Updated admin active status id=${id} isActive=${isActive}`
     );
     this.logger.debug(
-      `Updated admin active status: ${JSON.stringify(isActive)}`,
+      `Updated admin active status: ${JSON.stringify(isActive)}`
     );
     return this.findById(id);
   }
@@ -212,10 +212,10 @@ export class AdminService {
    */
   public async checkAdminPassWord(
     admin: Admin,
-    adminPassword: string,
+    adminPassword: string
   ): Promise<boolean> {
     return Promise.resolve(
-      await bcrypt.compare(adminPassword, admin.adminPasswordHash),
+      await bcrypt.compare(adminPassword, admin.adminPasswordHash)
     );
   }
 

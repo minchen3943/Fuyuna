@@ -24,7 +24,7 @@ export class CommentService {
     @InjectRepository(Comment)
     private readonly commentRepo: Repository<Comment>,
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis,
+    private readonly redis: Redis
   ) {}
 
   /**
@@ -104,7 +104,7 @@ export class CommentService {
         comment.updatedAt = new Date(comment.updatedAt);
       });
       this.logger.log(
-        `(cache) Found ${comments.length} comments on page ${page}`,
+        `(cache) Found ${comments.length} comments on page ${page}`
       );
       this.logger.debug(`(cache) Comments: ${JSON.stringify(comments)}`);
       return comments;
@@ -139,7 +139,7 @@ export class CommentService {
       const totalComments = JSON.parse(cached) as number;
       const totalPages = Math.ceil(totalComments / pageSize);
       this.logger.log(
-        `(cache) Total pages: ${totalPages} for page size ${pageSize}`,
+        `(cache) Total pages: ${totalPages} for page size ${pageSize}`
       );
       this.logger.debug(`Total comments: ${totalComments}`);
       return { totalPages };
@@ -167,7 +167,7 @@ export class CommentService {
       await this.redis.del('comment:totalPage:*');
       await this.redis.del(`comment:id:${result.commentId}`);
       this.logger.log(
-        `Comment created successfully with ID ${result.commentId}`,
+        `Comment created successfully with ID ${result.commentId}`
       );
       this.logger.debug(`Comment: ${JSON.stringify(result)}`);
       return result;
@@ -211,7 +211,7 @@ export class CommentService {
    */
   async updateStatus(
     commentId: number,
-    commentStatus: number,
+    commentStatus: number
   ): Promise<Comment | null> {
     if (!(await this.findById(commentId))) {
       return null;
@@ -222,7 +222,7 @@ export class CommentService {
       await this.redis.del('comment:all');
       await this.redis.del('comment:page:*');
       this.logger.log(
-        `Comment status updated successfully for ID ${commentId}`,
+        `Comment status updated successfully for ID ${commentId}`
       );
       this.logger.debug(`Updated comment status: ${JSON.stringify(result)}`);
       return this.findById(commentId);

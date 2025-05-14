@@ -12,7 +12,7 @@ import { TencentCosService } from 'src/tencent-cos/tencent-cos.service';
 export class FriendLinkResolver {
   constructor(
     private readonly friendLinkService: FriendLinkService,
-    private readonly tencentCosService: TencentCosService,
+    private readonly tencentCosService: TencentCosService
   ) {}
 
   @Query(() => FriendLinkResult)
@@ -41,7 +41,7 @@ export class FriendLinkResolver {
    */
   async getFriendLinkByPage(
     @Args('page', { type: () => Int }) page: number,
-    @Args('pageSize', { type: () => Int }) pageSize: number,
+    @Args('pageSize', { type: () => Int }) pageSize: number
   ) {
     const result = await this.friendLinkService.findByPage(page, pageSize);
     if (result && result.length > 0) {
@@ -65,7 +65,7 @@ export class FriendLinkResolver {
    * @returns 返回总页数的结果对象
    */
   async getFriendLinkTotalPages(
-    @Args('pageSize', { type: () => Int }) pageSize: number,
+    @Args('pageSize', { type: () => Int }) pageSize: number
   ) {
     if (pageSize <= 0) {
       return {
@@ -89,7 +89,7 @@ export class FriendLinkResolver {
    * @returns 返回指定ID的友链结果对象
    */
   async getFriendLinkById(
-    @Args('friend_link_id', { type: () => Int }) friendLinkId: number,
+    @Args('friend_link_id', { type: () => Int }) friendLinkId: number
   ) {
     const result = await this.friendLinkService.findById(friendLinkId);
     if (result) {
@@ -127,7 +127,7 @@ export class FriendLinkResolver {
     }
     const result = await this.friendLinkService.updateFriendLink(
       data.linkId,
-      data,
+      data
     );
 
     if (result) {
@@ -155,7 +155,7 @@ export class FriendLinkResolver {
    */
   async updateFriendLinkStatus(
     @Args('friend_link_id', { type: () => Int }) friendLinkId: number,
-    @Args('friend_link_status', { type: () => Int }) friendLinkStatus: number,
+    @Args('friend_link_status', { type: () => Int }) friendLinkStatus: number
   ) {
     if (
       typeof friendLinkStatus !== 'number' ||
@@ -169,7 +169,7 @@ export class FriendLinkResolver {
     }
     const result = await this.friendLinkService.updateStatus(
       friendLinkId,
-      friendLinkStatus,
+      friendLinkStatus
     );
 
     if (result) {
@@ -195,7 +195,7 @@ export class FriendLinkResolver {
    * @returns 返回删除成功的结果对象
    */
   async deleteFriendLink(
-    @Args('friend_link_id', { type: () => Int }) friendLinkId: number,
+    @Args('friend_link_id', { type: () => Int }) friendLinkId: number
   ) {
     const friendLink = await this.friendLinkService.findById(friendLinkId);
     if (!friendLink) {

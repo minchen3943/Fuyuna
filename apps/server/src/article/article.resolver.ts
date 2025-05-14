@@ -12,7 +12,7 @@ import { TencentCosService } from 'src/tencent-cos/tencent-cos.service';
 export class ArticleResolver {
   constructor(
     private readonly articleService: ArticleService,
-    private readonly tencentCosService: TencentCosService,
+    private readonly tencentCosService: TencentCosService
   ) {}
 
   @Query(() => ArticleResult)
@@ -41,7 +41,7 @@ export class ArticleResolver {
    */
   async getArticleByPage(
     @Args('page', { type: () => Int }) page: number,
-    @Args('pageSize', { type: () => Int }) pageSize: number,
+    @Args('pageSize', { type: () => Int }) pageSize: number
   ) {
     const result = await this.articleService.findByPage(page, pageSize);
     if (result && result.length > 0) {
@@ -65,7 +65,7 @@ export class ArticleResolver {
    * @returns 返回总页数的结果对象
    */
   async getArticleTotalPages(
-    @Args('pageSize', { type: () => Int }) pageSize: number,
+    @Args('pageSize', { type: () => Int }) pageSize: number
   ) {
     if (pageSize <= 0) {
       return {
@@ -176,7 +176,7 @@ export class ArticleResolver {
    */
   async updateArticleStatus(
     @Args('article_id', { type: () => Int }) articleId: number,
-    @Args('article_status', { type: () => Int }) articleStatus: number,
+    @Args('article_status', { type: () => Int }) articleStatus: number
   ) {
     if (
       typeof articleStatus !== 'number' ||
@@ -190,7 +190,7 @@ export class ArticleResolver {
     }
     const result = await this.articleService.updateStatus(
       articleId,
-      articleStatus,
+      articleStatus
     );
 
     if (result) {
@@ -216,7 +216,7 @@ export class ArticleResolver {
    * @returns 返回删除成功的结果对象
    */
   async deleteArticle(
-    @Args('article_id', { type: () => Int }) articleId: number,
+    @Args('article_id', { type: () => Int }) articleId: number
   ) {
     const article = await this.articleService.findById(articleId);
     if (!article) {

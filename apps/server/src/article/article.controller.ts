@@ -46,7 +46,7 @@ export class ArticleController {
    */
   constructor(
     private readonly tencentCosService: TencentCosService,
-    private readonly articleService: ArticleService,
+    private readonly articleService: ArticleService
   ) {}
 
   /**
@@ -59,7 +59,7 @@ export class ArticleController {
   @UseInterceptors(FileInterceptor('file'))
   async createArticle(
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: { articleTitle: string },
+    @Body() body: { articleTitle: string }
   ) {
     const isMarkdown =
       file &&

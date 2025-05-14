@@ -16,7 +16,7 @@ export class AdminResolver {
     private readonly adminService: AdminService,
     private readonly jwtService: JwtService,
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis,
+    private readonly redis: Redis
   ) {}
 
   private readonly logger = new Logger(AdminResolver.name);
@@ -40,7 +40,7 @@ export class AdminResolver {
         `blacklist:${decoded.jti}`,
         'revoked',
         'EX',
-        decoded.exp - Math.floor(Date.now() / 1000),
+        decoded.exp - Math.floor(Date.now() / 1000)
       );
       return true;
     } catch (error) {
@@ -118,7 +118,7 @@ export class AdminResolver {
   @Mutation(() => AdminResult)
   async updateAdmin(
     @Args('data') data: UpdateAdminInput,
-    @Context('req') req: Request,
+    @Context('req') req: Request
   ) {
     if (!(await this.getAdminById(data.adminId))) {
       return null;
@@ -160,7 +160,7 @@ export class AdminResolver {
   async updateAdminStatus(
     @Args('adminId', { type: () => Int }) adminId: number,
     @Args('isActive', { type: () => Boolean }) isActive: boolean,
-    @Context('req') req: Request,
+    @Context('req') req: Request
   ) {
     const result = await this.adminService.updateActive(adminId, isActive);
     if (result) {
@@ -197,7 +197,7 @@ export class AdminResolver {
   @Mutation(() => AdminResult)
   async deleteAdmin(
     @Args('adminId', { type: () => Int }) adminId: number,
-    @Context('req') req: Request,
+    @Context('req') req: Request
   ) {
     const result = await this.adminService.remove(adminId);
     if (result === true) {
