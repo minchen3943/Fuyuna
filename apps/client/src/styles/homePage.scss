@@ -1,0 +1,22 @@
+.animate-fade-up {
+  will-change: opacity, transform;
+  animation: fade-up 0.5s cubic-bezier(0.42, 0.11, 0.43, 1.73) forwards;
+}
+
+@for $i from 0 through 50 {
+  .delay-#{$i} {
+    animation-delay: #{150 + 65 * $i}ms;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

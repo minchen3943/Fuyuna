@@ -1,0 +1,4 @@
+ styles/globals.css
+ coverage
+ .next
+ node_modules

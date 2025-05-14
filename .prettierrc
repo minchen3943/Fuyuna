@@ -4,5 +4,13 @@
   "trailingComma": "es5",
   "printWidth": 80,
   "tabWidth": 2,
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": ["apps/client/**/*.{js,jsx,ts,tsx,css,html}"],
+      "options": {
+        "plugins": ["prettier-plugin-tailwindcss"]
+      }
+    }
+  ]
 }
